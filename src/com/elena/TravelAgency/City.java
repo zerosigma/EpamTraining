@@ -1,4 +1,4 @@
-package com.elena.tourism;
+package com.elena.TravelAgency;
 
 public class City {
     private String name;
