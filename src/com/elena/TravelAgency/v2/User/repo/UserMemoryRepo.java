@@ -1,9 +1,9 @@
-package com.elena.TravelAgency.v1.User.repo;
+package com.elena.TravelAgency.v2.User.repo;
 
-import com.elena.TravelAgency.v1.User.User;
+import com.elena.TravelAgency.v2.User.User;
 
-import static com.elena.TravelAgency.v1.Storage.Storage.users;
-import static com.elena.TravelAgency.v1.utils.ArrayUtils.ArrayUtils.deleteElement;
+import static com.elena.TravelAgency.v2.Storage.Storage.users;
+import static com.elena.TravelAgency.v2.utils.ArrayUtils.ArrayUtils.deleteElement;
 
 public class UserMemoryRepo {
     private int userIndexInStorage = -1;

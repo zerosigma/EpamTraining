@@ -1,7 +1,7 @@
-package com.elena.TravelAgency.v1.Order.service;
+package com.elena.TravelAgency.v2.Order.service;
 
-import com.elena.TravelAgency.v1.Order.Order;
-import com.elena.TravelAgency.v1.Order.repo.OrderMemoryRepo;
+import com.elena.TravelAgency.v2.Order.Order;
+import com.elena.TravelAgency.v2.Order.repo.OrderMemoryRepo;
 
 public class OrderMemoryService {
     private OrderMemoryRepo orderMemoryRepo = new OrderMemoryRepo();

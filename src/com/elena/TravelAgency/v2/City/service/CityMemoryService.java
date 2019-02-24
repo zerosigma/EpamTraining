@@ -1,7 +1,7 @@
-package com.elena.TravelAgency.v1.City.service;
+package com.elena.TravelAgency.v2.City.service;
 
-import com.elena.TravelAgency.v1.City.City;
-import com.elena.TravelAgency.v1.City.repo.CityMemoryRepo;
+import com.elena.TravelAgency.v2.City.City;
+import com.elena.TravelAgency.v2.City.repo.CityMemoryRepo;
 
 public class CityMemoryService {
     private CityMemoryRepo cityMemoryRepo = new CityMemoryRepo();

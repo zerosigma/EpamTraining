@@ -1,7 +1,7 @@
-package com.elena.TravelAgency.v1.Country.service;
+package com.elena.TravelAgency.v2.Country.service;
 
-import com.elena.TravelAgency.v1.Country.Country;
-import com.elena.TravelAgency.v1.Country.repo.CountryMemoryRepo;
+import com.elena.TravelAgency.v2.Country.Country;
+import com.elena.TravelAgency.v2.Country.repo.CountryMemoryRepo;
 
 public class CountryMemoryService {
     private CountryMemoryRepo countryMemoryRepo = new CountryMemoryRepo();
