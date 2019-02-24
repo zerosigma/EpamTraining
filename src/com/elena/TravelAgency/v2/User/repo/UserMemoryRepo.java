@@ -9,14 +9,16 @@ public class UserMemoryRepo {
     private int userIndexInStorage = -1;
 
     public void addUser(User user) {
-        if (userIndexInStorage == users.length - 1) {
-            User[] newUsers = new User[users.length * 2];
-            System.arraycopy(user, 0, newUsers, 0, users.length);
-            users = newUsers;
-        }
+        if (findIndex(user) == null) {
+            if (userIndexInStorage == users.length - 1) {
+                User[] newUsers = new User[users.length * 2];
+                System.arraycopy(user, 0, newUsers, 0, users.length);
+                users = newUsers;
+            }
 
-        userIndexInStorage++;
-        users[userIndexInStorage] = user;
+            userIndexInStorage++;
+            users[userIndexInStorage] = user;
+        }
     }
 
     public void deleteUser(Long id) {

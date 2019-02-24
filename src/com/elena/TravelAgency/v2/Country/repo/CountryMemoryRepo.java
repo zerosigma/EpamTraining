@@ -9,14 +9,16 @@ public class CountryMemoryRepo {
     private int countryIndexInStorage = -1;
 
     public void addCountry(Country country) {
-        if (countryIndexInStorage == countries.length - 1) {
-            Country[] newCountries = new Country[countries.length * 2];
-            System.arraycopy(countries, 0, newCountries, 0, countries.length);
-            countries = newCountries;
-        }
+        if (findIndex(country) == null) {
+            if (countryIndexInStorage == countries.length - 1) {
+                Country[] newCountries = new Country[countries.length * 2];
+                System.arraycopy(countries, 0, newCountries, 0, countries.length);
+                countries = newCountries;
+            }
 
-        countryIndexInStorage++;
-        countries[countryIndexInStorage] = country;
+            countryIndexInStorage++;
+            countries[countryIndexInStorage] = country;
+        }
     }
 
     public void deleteCountry(Long id) {

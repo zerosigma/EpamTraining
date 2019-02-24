@@ -9,14 +9,16 @@ public class OrderMemoryRepo {
     private int orderIndexInStorage = -1;
 
     public void addOrder(Order order) {
-        if (orderIndexInStorage == orders.length - 1) {
-            Order[] newOrders = new Order[orders.length * 2];
-            System.arraycopy(orders, 0, newOrders, 0, orders.length);
-            orders = newOrders;
-        }
+        if (findIndex(order) == null) {
+            if (orderIndexInStorage == orders.length - 1) {
+                Order[] newOrders = new Order[orders.length * 2];
+                System.arraycopy(orders, 0, newOrders, 0, orders.length);
+                orders = newOrders;
+            }
 
-        orderIndexInStorage++;
-        orders[orderIndexInStorage] = order;
+            orderIndexInStorage++;
+            orders[orderIndexInStorage] = order;
+        }
     }
 
     public void deleteOrder(Long id) {

@@ -6,7 +6,7 @@ import com.elena.TravelAgency.v2.Order.Order;
 import com.elena.TravelAgency.v2.User.User;
 
 public class Storage {
-    public static final int CAPACITY = 10;
+    private static final int CAPACITY = 5;
 
     public static Country[] countries = new Country[CAPACITY];
     public static City[] cities = new City[CAPACITY];

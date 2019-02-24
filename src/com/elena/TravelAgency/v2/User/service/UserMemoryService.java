@@ -1,13 +1,20 @@
 package com.elena.TravelAgency.v2.User.service;
 
+import com.elena.TravelAgency.v2.Order.Order;
+import com.elena.TravelAgency.v2.Order.repo.OrderMemoryRepo;
 import com.elena.TravelAgency.v2.User.User;
 import com.elena.TravelAgency.v2.User.repo.UserMemoryRepo;
 
 public class UserMemoryService {
     private UserMemoryRepo userMemoryRepo = new UserMemoryRepo();
+    private OrderMemoryRepo orderMemoryRepo = new OrderMemoryRepo();
 
     public void addUser(User user) {
        userMemoryRepo.addUser(user);
+
+       if (user.getOrders() != null)
+           for (Order order : user.getOrders())
+               orderMemoryRepo.addOrder(order);
     }
 
     public void deleteUser(Long id) {

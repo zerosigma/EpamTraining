@@ -10,15 +10,17 @@ public class CityMemoryRepo {
     private int cityIndexInStorage = -1;
 
     public void addCity(City city) {
-        if (cityIndexInStorage == cities.length - 1) {
-            extendArray(cities);
-            //City[] newCities = new City[cities.length * 2];
-            //System.arraycopy(cities, 0, newCities, 0, cities.length);
-            //cities = newCities;
-        }
+        if (findIndex(city) == null) {
+            if (cityIndexInStorage == cities.length - 1) {
+                extendArray(cities);
+                //City[] newCities = new City[cities.length * 2];
+                //System.arraycopy(cities, 0, newCities, 0, cities.length);
+                //cities = newCities;
+            }
 
-        cityIndexInStorage++;
-        cities[cityIndexInStorage] = city;
+            cityIndexInStorage++;
+            cities[cityIndexInStorage] = city;
+        }
     }
 
     public void deleteCity(Long id) {
