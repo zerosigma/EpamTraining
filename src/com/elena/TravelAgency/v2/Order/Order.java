@@ -1,5 +1,7 @@
 package com.elena.TravelAgency.v2.Order;
 
+import java.util.Objects;
+
 public class Order {
     private Long id;
     private Integer price;
@@ -26,5 +28,22 @@ public class Order {
         return "Order " +
                 "id = " + id +
                 ", price = " + price;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Order order = (Order) o;
+        return id.equals(order.id) &&
+                price.equals(order.price);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, price);
     }
 }

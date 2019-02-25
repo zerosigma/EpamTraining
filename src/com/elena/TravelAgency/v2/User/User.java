@@ -2,6 +2,7 @@ package com.elena.TravelAgency.v2.User;
 
 import com.elena.TravelAgency.v2.Order.Order;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public class User {
@@ -108,5 +109,27 @@ public class User {
             ordersAsString.append(order.toString()).append("\n");
 
         return ordersAsString.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        User user = (User) o;
+        return id.equals(user.id) &&
+                firstName.equals(user.firstName) &&
+                lastName.equals(user.lastName) &&
+                passport.equals(user.passport) &&
+                Arrays.equals(orders, user.orders);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(id, firstName, lastName, passport);
+        result = 31 * result + Arrays.hashCode(orders);
+        return result;
     }
 }
