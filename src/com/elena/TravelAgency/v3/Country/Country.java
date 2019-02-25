@@ -9,12 +9,21 @@ public class Country {
     private Long id;
     private String name;
     private String language;
+    private ClimateType climateType;
 
     private City[] cities;
 
-    public Country(String name, String language) {
+    public Country(Long id, String name, String language) {
+        this.id = id;
         this.name = name;
         this.language = language;
+    }
+
+    public Country(Long id, String name, String language, ClimateType climateType) {
+        this.id = id;
+        this.name = name;
+        this.language = language;
+        this.climateType = climateType;
     }
 
     public Long getId() {
@@ -43,6 +52,14 @@ public class Country {
 
     public void setCities(City[] cities) {
         this.cities = cities;
+    }
+
+    public ClimateType getClimateType() {
+        return climateType;
+    }
+
+    public void setClimateType(ClimateType climateType) {
+        this.climateType = climateType;
     }
 
     @Override

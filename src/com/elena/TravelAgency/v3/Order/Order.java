@@ -11,6 +11,10 @@ public class Order {
         this.price = price;
     }
 
+    private enum Currency {
+        RUB
+    }
+
     public Long getId() {
         return id;
     }
