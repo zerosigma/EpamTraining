@@ -1,14 +1,14 @@
-package com.elena.TravelAgency.v2.User.repo;
+package com.elena.TravelAgency.v3.User.repo;
 
-import com.elena.TravelAgency.v2.User.User;
+import com.elena.TravelAgency.v3.User.User;
 
-import static com.elena.TravelAgency.v2.Storage.Storage.users;
-import static com.elena.TravelAgency.v2.utils.ArrayUtils.ArrayUtils.deleteElement;
+import static com.elena.TravelAgency.v3.Storage.Storage.users;
+import static com.elena.TravelAgency.v3.common.utils.ArrayUtils.deleteElement;
 
-public class UserMemoryRepo {
+public class UserMemoryRepo implements UserRepo {
     private int userIndexInStorage = -1;
 
-    public void addUser(User user) {
+    public void add(User user) {
         if (findIndex(user) == null) {
             if (userIndexInStorage == users.length - 1) {
                 User[] newUsers = new User[users.length * 2];
@@ -21,7 +21,7 @@ public class UserMemoryRepo {
         }
     }
 
-    public void deleteUser(Long id) {
+    public void delete(Long id) {
         Integer userIndex = findIndex(id);
 
         if (userIndex != null) {
@@ -30,7 +30,7 @@ public class UserMemoryRepo {
         }
     }
 
-    public void deleteUser(User user) {
+    public void delete(User user) {
         Integer userIndex = findIndex(user);
 
         if (userIndex != null) {
@@ -39,7 +39,7 @@ public class UserMemoryRepo {
         }
     }
 
-    public void deleteUser(User.Passport passport) {
+    public void delete(User.Passport passport) {
         Integer userIndex = findIndex(passport);
 
         if (userIndex != null) {
@@ -48,7 +48,7 @@ public class UserMemoryRepo {
         }
     }
 
-    public User findUser(Long id) {
+    public User find(Long id) {
         for (User user : users)
             if (user.getId().equals(id))
                 return user;
@@ -56,7 +56,7 @@ public class UserMemoryRepo {
         return null;
     }
 
-    public User findUser(User.Passport passport) {
+    public User find(User.Passport passport) {
         for (User user : users)
             if (user.getPassport().equals(passport))
                 return user;
