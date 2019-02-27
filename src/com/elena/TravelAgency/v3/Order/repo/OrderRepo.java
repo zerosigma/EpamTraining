@@ -6,6 +6,6 @@ import com.elena.TravelAgency.v3.common.repo.BaseRepo;
 public interface OrderRepo extends BaseRepo {
     void add(Order order);
     void delete(Order order);
-    Order find(Long id);
+    Order find(long id);
 
 }

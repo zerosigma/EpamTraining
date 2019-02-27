@@ -10,26 +10,32 @@ public class CountryMemoryService implements CountryService {
     private CityMemoryRepo cityMemoryRepo = new CityMemoryRepo();
 
     public void add(Country country) {
-        countryMemoryRepo.add(country);
+        if (country != null) {
+            countryMemoryRepo.add(country);
 
-        if (country.getCities() != null)
-            for (City city : country.getCities())
-                cityMemoryRepo.add(city);
+            if (country.getCities() != null)
+                for (City city : country.getCities())
+                    cityMemoryRepo.add(city);
+        }
     }
 
     public void delete(Long id) {
-        countryMemoryRepo.delete(id);
+        if (id != null)
+            countryMemoryRepo.delete(id);
     }
 
     public void delete(Country country) {
-        countryMemoryRepo.delete(country);
+        if (country != null)
+            countryMemoryRepo.delete(country);
     }
 
     public void find(Long id) {
-        countryMemoryRepo.find(id);
+        if (id != null)
+            countryMemoryRepo.find(id);
     }
 
     public void find(String name) {
-        countryMemoryRepo.find(name);
+        if (name != null)
+            countryMemoryRepo.find(name);
     }
 }

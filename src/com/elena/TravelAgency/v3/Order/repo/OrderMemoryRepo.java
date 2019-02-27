@@ -21,7 +21,7 @@ public class OrderMemoryRepo implements OrderRepo {
         }
     }
 
-    public void delete(Long id) {
+    public void delete(long id) {
         Integer orderIndex = findIndex(id);
 
         if (orderIndex != null) {
@@ -39,7 +39,7 @@ public class OrderMemoryRepo implements OrderRepo {
         }
     }
 
-    public Order find(Long id) {
+    public Order find(long id) {
         for (Order order : orders)
             if (order.getId().equals(id))
                 return order;
@@ -47,7 +47,7 @@ public class OrderMemoryRepo implements OrderRepo {
         return null;
     }
 
-    private Integer findIndex(Long id) {
+    private Integer findIndex(long id) {
         for (int i = 0; i < orders.length; i++)
             if (orders[i].getId().equals(id))
                 return i;

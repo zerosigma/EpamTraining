@@ -21,7 +21,7 @@ public class UserMemoryRepo implements UserRepo {
         }
     }
 
-    public void delete(Long id) {
+    public void delete(long id) {
         Integer userIndex = findIndex(id);
 
         if (userIndex != null) {
@@ -48,7 +48,7 @@ public class UserMemoryRepo implements UserRepo {
         }
     }
 
-    public User find(Long id) {
+    public User find(long id) {
         for (User user : users)
             if (user.getId().equals(id))
                 return user;
@@ -64,7 +64,7 @@ public class UserMemoryRepo implements UserRepo {
         return null;
     }
 
-    private Integer findIndex(Long id) {
+    private Integer findIndex(long id) {
         for (int i = 0; i < users.length; i++)
             if (users[i].getId().equals(id))
                 return i;

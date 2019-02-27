@@ -1,6 +1,7 @@
 package com.elena.TravelAgency.v3.Country;
 
 import com.elena.TravelAgency.v3.City.City;
+import com.elena.TravelAgency.v3.City.ClimateType;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -9,7 +10,6 @@ public class Country {
     private Long id;
     private String name;
     private String language;
-    private ClimateType climateType;
 
     private City[] cities;
 
@@ -17,13 +17,6 @@ public class Country {
         this.id = id;
         this.name = name;
         this.language = language;
-    }
-
-    public Country(Long id, String name, String language, ClimateType climateType) {
-        this.id = id;
-        this.name = name;
-        this.language = language;
-        this.climateType = climateType;
     }
 
     public Long getId() {
@@ -52,14 +45,6 @@ public class Country {
 
     public void setCities(City[] cities) {
         this.cities = cities;
-    }
-
-    public ClimateType getClimateType() {
-        return climateType;
-    }
-
-    public void setClimateType(ClimateType climateType) {
-        this.climateType = climateType;
     }
 
     @Override

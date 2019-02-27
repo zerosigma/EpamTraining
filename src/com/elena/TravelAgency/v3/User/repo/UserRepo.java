@@ -7,6 +7,6 @@ public interface UserRepo extends BaseRepo {
     void add(User user);
     void delete(User user);
     void delete(User.Passport passport);
-    User find(Long id);
+    User find(long id);
     User find(User.Passport passport);
 }

@@ -1,4 +1,4 @@
-package com.elena.TravelAgency.v3.Country;
+package com.elena.TravelAgency.v3.City;
 
 public enum ClimateType {
     ARCTIC,

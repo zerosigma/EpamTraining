@@ -10,30 +10,37 @@ public class UserMemoryService implements UserService {
     private OrderMemoryRepo orderMemoryRepo = new OrderMemoryRepo();
 
     public void add(User user) {
-       userMemoryRepo.add(user);
+        if (user != null) {
+            userMemoryRepo.add(user);
 
-       if (user.getOrders() != null)
-           for (Order order : user.getOrders())
-               orderMemoryRepo.add(order);
+            if (user.getOrders() != null)
+                for (Order order : user.getOrders())
+                    orderMemoryRepo.add(order);
+        }
     }
 
     public void delete(Long id) {
-        userMemoryRepo.delete(id);
+        if (id != null)
+            userMemoryRepo.delete(id);
     }
 
     public void delete(User user) {
-        userMemoryRepo.delete(user);
+        if (user != null)
+            userMemoryRepo.delete(user);
     }
 
     public void delete(User.Passport passport) {
-        userMemoryRepo.delete(passport);
+        if (passport != null)
+            userMemoryRepo.delete(passport);
     }
 
     public void find(Long id) {
-        userMemoryRepo.find(id);
+        if (id != null)
+            userMemoryRepo.find(id);
     }
 
     public void find(User.Passport passport) {
-        userMemoryRepo.find(passport);
+        if (passport != null)
+            userMemoryRepo.find(passport);
     }
 }

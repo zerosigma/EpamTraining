@@ -6,6 +6,7 @@ public class City {
     private Long id;
     private String name;
     private boolean isCapital;
+    private ClimateType climateType;
 
     public City(String name, boolean isCapital) {
         this.name = name;
@@ -16,6 +17,13 @@ public class City {
         this.id = id;
         this.name = name;
         this.isCapital = isCapital;
+    }
+
+    public City(Long id, String name, boolean isCapital, ClimateType climateType) {
+        this.id = id;
+        this.name = name;
+        this.isCapital = isCapital;
+        this.climateType = climateType;
     }
 
     public Long getId() {
@@ -36,6 +44,14 @@ public class City {
 
     public void setCapital(boolean capital) {
         isCapital = capital;
+    }
+
+    public ClimateType getClimateType() {
+        return climateType;
+    }
+
+    public void setClimateType(ClimateType climateType) {
+        this.climateType = climateType;
     }
 
     @Override

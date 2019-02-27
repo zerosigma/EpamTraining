@@ -4,7 +4,6 @@ import com.elena.TravelAgency.v3.City.City;
 
 import static com.elena.TravelAgency.v3.Storage.Storage.cities;
 import static com.elena.TravelAgency.v3.common.utils.ArrayUtils.deleteElement;
-import static com.elena.TravelAgency.v3.common.utils.ArrayUtils.extendArray;
 
 public class CityMemoryRepo implements CityRepo {
     private int cityIndexInStorage = -1;
@@ -12,10 +11,9 @@ public class CityMemoryRepo implements CityRepo {
     public void add(City city) {
         if (findIndex(city) == null) {
             if (cityIndexInStorage == cities.length - 1) {
-                extendArray(cities);
-                //City[] newCities = new City[cities.length * 2];
-                //System.arraycopy(cities, 0, newCities, 0, cities.length);
-                //cities = newCities;
+                City[] newCities = new City[cities.length * 2];
+                System.arraycopy(cities, 0, newCities, 0, cities.length);
+                cities = newCities;
             }
 
             cityIndexInStorage++;
@@ -23,7 +21,7 @@ public class CityMemoryRepo implements CityRepo {
         }
     }
 
-    public void delete(Long id) {
+    public void delete(long id) {
         Integer cityIndex = findIndex(id);
 
         if (cityIndex != null) {
@@ -41,7 +39,7 @@ public class CityMemoryRepo implements CityRepo {
         }
     }
 
-    public City find(Long id) {
+    public City find(long id) {
         for (City city : cities)
             if (city.getId().equals(id))
                 return city;
@@ -57,7 +55,7 @@ public class CityMemoryRepo implements CityRepo {
         return null;
     }
 
-    private Integer findIndex(Long id) {
+    private Integer findIndex(long id) {
         for (int i = 0; i < cities.length; i++)
             if (cities[i].getId().equals(id))
                 return i;

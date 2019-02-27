@@ -7,18 +7,22 @@ public class OrderMemoryService implements OrderService {
     private OrderMemoryRepo orderMemoryRepo = new OrderMemoryRepo();
 
     public void add(Order order) {
-        orderMemoryRepo.add(order);
+        if (order != null)
+            orderMemoryRepo.add(order);
     }
 
     public void delete(Long id) {
-        orderMemoryRepo.delete(id);
+        if (id != null)
+            orderMemoryRepo.delete(id);
     }
 
     public void delete(Order order) {
-        orderMemoryRepo.delete(order);
+        if (order != null)
+            orderMemoryRepo.delete(order);
     }
 
     public void find(Long id) {
-        orderMemoryRepo.find(id);
+        if (id != null)
+            orderMemoryRepo.find(id);
     }
 }

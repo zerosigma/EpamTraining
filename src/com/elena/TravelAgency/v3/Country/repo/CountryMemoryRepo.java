@@ -21,7 +21,7 @@ public class CountryMemoryRepo implements CountryRepo {
         }
     }
 
-    public void delete(Long id) {
+    public void delete(long id) {
         Integer countryIndex = findIndex(id);
 
         if (countryIndex != null) {
@@ -39,7 +39,7 @@ public class CountryMemoryRepo implements CountryRepo {
         }
     }
 
-    public Country find(Long id) {
+    public Country find(long id) {
         for (Country country : countries)
             if (country.getId().equals(id))
                 return country;
@@ -55,7 +55,7 @@ public class CountryMemoryRepo implements CountryRepo {
         return null;
     }
 
-    private Integer findIndex(Long id) {
+    private Integer findIndex(long id) {
         for (int i = 0; i < countries.length; i++)
             if (countries[i].getId().equals(id))
                 return i;
