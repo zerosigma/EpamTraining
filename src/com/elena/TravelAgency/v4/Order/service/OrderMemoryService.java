@@ -1,28 +1,28 @@
 package com.elena.TravelAgency.v4.Order.service;
 
 import com.elena.TravelAgency.v4.Order.domain.Order;
-import com.elena.TravelAgency.v4.Order.repo.OrderMemoryRepo;
+import com.elena.TravelAgency.v4.Order.repo.OrderRepo;
 
 public class OrderMemoryService implements OrderService {
-    private OrderMemoryRepo orderMemoryRepo = new OrderMemoryRepo();
+    private final OrderRepo orderRepo;
 
     public void add(Order order) {
         if (order != null)
-            orderMemoryRepo.add(order);
+            orderRepo.add(order);
     }
 
     public void delete(Long id) {
         if (id != null)
-            orderMemoryRepo.delete(id);
+            orderRepo.delete(id);
     }
 
     public void delete(Order order) {
         if (order != null)
-            orderMemoryRepo.delete(order);
+            orderRepo.delete(order);
     }
 
     public void find(Long id) {
         if (id != null)
-            orderMemoryRepo.find(id);
+            orderRepo.find(id);
     }
 }

@@ -1,13 +1,16 @@
 package com.elena.TravelAgency.v4.City.repo;
 
 import com.elena.TravelAgency.v4.City.domain.City;
+import com.elena.TravelAgency.v4.City.search.CitySearchCondition;
 
-import static com.elena.TravelAgency.v3.Storage.Storage.cities;
-import static com.elena.TravelAgency.v3.common.utils.ArrayUtils.deleteElement;
+import static com.elena.TravelAgency.v4.Storage.Storage.cities;
+import static com.elena.TravelAgency.v4.common.utils.ArrayUtils.deleteElement;
 
-public class CityMemoryRepo implements CityRepo {
+public class CityMemoryArrayRepo implements CityArrayRepo {
+    private static final City[] EMPTY_CITY_ARRAY = new City[0];
     private int cityIndexInStorage = -1;
 
+    @Override
     public void add(City city) {
         if (findIndex(city) == null) {
             if (cityIndexInStorage == cities.length - 1) {
@@ -21,6 +24,7 @@ public class CityMemoryRepo implements CityRepo {
         }
     }
 
+    @Override
     public void delete(long id) {
         Integer cityIndex = findIndex(id);
 
@@ -30,6 +34,7 @@ public class CityMemoryRepo implements CityRepo {
         }
     }
 
+    @Override
     public void delete(City city) {
         Integer cityIndex = findIndex(city);
 
@@ -39,6 +44,7 @@ public class CityMemoryRepo implements CityRepo {
         }
     }
 
+    @Override
     public City find(long id) {
         for (City city : cities)
             if (city.getId().equals(id))
@@ -47,6 +53,7 @@ public class CityMemoryRepo implements CityRepo {
         return null;
     }
 
+    @Override
     public City find(String name) {
         for (City city : cities)
             if (city.getName().equals(name))
@@ -69,5 +76,36 @@ public class CityMemoryRepo implements CityRepo {
                 return i;
 
         return null;
+    }
+
+    @Override
+    public City[] search(CitySearchCondition citySearchCondition) {
+        if (citySearchCondition.searchById())
+            return new City[]{find(citySearchCondition.getId())};
+        else {
+            City[] result = new City[cities.length];
+            int resultIndex = 0;
+
+            for (City city : cities)
+                if (city != null) {
+                    boolean found = true;
+
+                    if (citySearchCondition.searchByCityName())
+                        found = citySearchCondition.getName().equals(city.getName());
+
+                    if (found) {
+                        result[resultIndex] = city;
+                        resultIndex++;
+                    }
+                }
+
+            if (resultIndex > 0) {
+                City[] returnableResult = new City[resultIndex];
+                System.arraycopy(result, 0, returnableResult, 0, resultIndex);
+                return returnableResult;
+            }
+
+            return EMPTY_CITY_ARRAY;
+        }
     }
 }

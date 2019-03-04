@@ -1,46 +1,46 @@
 package com.elena.TravelAgency.v4.User.service;
 
 import com.elena.TravelAgency.v4.Order.domain.Order;
-import com.elena.TravelAgency.v4.Order.repo.OrderMemoryRepo;
+import com.elena.TravelAgency.v4.Order.repo.OrderRepo;
 import com.elena.TravelAgency.v4.User.domain.User;
-import com.elena.TravelAgency.v4.User.repo.UserMemoryRepo;
+import com.elena.TravelAgency.v4.User.repo.UserRepo;
 
 public class UserMemoryService implements UserService {
-    private UserMemoryRepo userMemoryRepo = new UserMemoryRepo();
-    private OrderMemoryRepo orderMemoryRepo = new OrderMemoryRepo();
+    private final UserRepo userRepo;
+    private final OrderRepo orderRepo;
 
     public void add(User user) {
         if (user != null) {
-            userMemoryRepo.add(user);
+            userRepo.add(user);
 
             if (user.getOrders() != null)
                 for (Order order : user.getOrders())
-                    orderMemoryRepo.add(order);
+                    orderRepo.add(order);
         }
     }
 
     public void delete(Long id) {
         if (id != null)
-            userMemoryRepo.delete(id);
+            userRepo.delete(id);
     }
 
     public void delete(User user) {
         if (user != null)
-            userMemoryRepo.delete(user);
+            userRepo.delete(user);
     }
 
     public void delete(User.Passport passport) {
         if (passport != null)
-            userMemoryRepo.delete(passport);
+            userRepo.delete(passport);
     }
 
     public void find(Long id) {
         if (id != null)
-            userMemoryRepo.find(id);
+            userRepo.find(id);
     }
 
     public void find(User.Passport passport) {
         if (passport != null)
-            userMemoryRepo.find(passport);
+            userRepo.find(passport);
     }
 }

@@ -1,41 +1,41 @@
 package com.elena.TravelAgency.v4.Country.service;
 
+import com.elena.TravelAgency.v4.City.repo.CityRepo;
+import com.elena.TravelAgency.v4.Country.repo.CountryRepo;
 import com.elena.TravelAgency.v4.City.domain.City;
-import com.elena.TravelAgency.v4.City.repo.CityMemoryRepo;
 import com.elena.TravelAgency.v4.Country.domain.Country;
-import com.elena.TravelAgency.v4.Country.repo.CountryMemoryRepo;
 
 public class CountryMemoryService implements CountryService {
-    private CountryMemoryRepo countryMemoryRepo = new CountryMemoryRepo();
-    private CityMemoryRepo cityMemoryRepo = new CityMemoryRepo();
+    private final CountryRepo countryRepo;
+    private final CityRepo cityRepo;
 
     public void add(Country country) {
         if (country != null) {
-            countryMemoryRepo.add(country);
+            countryRepo.add(country);
 
             if (country.getCities() != null)
                 for (City city : country.getCities())
-                    cityMemoryRepo.add(city);
+                    cityRepo.add(city);
         }
     }
 
     public void delete(Long id) {
         if (id != null)
-            countryMemoryRepo.delete(id);
+            countryRepo.delete(id);
     }
 
     public void delete(Country country) {
         if (country != null)
-            countryMemoryRepo.delete(country);
+            countryRepo.delete(country);
     }
 
     public void find(Long id) {
         if (id != null)
-            countryMemoryRepo.find(id);
+            countryRepo.find(id);
     }
 
     public void find(String name) {
         if (name != null)
-            countryMemoryRepo.find(name);
+            countryRepo.find(name);
     }
 }

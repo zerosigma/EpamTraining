@@ -1,11 +1,13 @@
 package com.elena.TravelAgency.v4.Order.repo;
 
 import com.elena.TravelAgency.v4.Order.domain.Order;
+import com.elena.TravelAgency.v4.Order.search.OrderSearchCondition;
 
-import static com.elena.TravelAgency.v3.Storage.Storage.orders;
-import static com.elena.TravelAgency.v3.common.utils.ArrayUtils.deleteElement;
+import static com.elena.TravelAgency.v4.Storage.Storage.orders;
+import static com.elena.TravelAgency.v4.common.utils.ArrayUtils.deleteElement;
 
-public class OrderMemoryRepo implements OrderRepo {
+public class OrderMemoryArrayRepo implements OrderArrayRepo {
+    private static final Order[] EMPTY_ORDER_ARRAY = new Order[0];
     private int orderIndexInStorage = -1;
 
     public void add(Order order) {
@@ -61,5 +63,36 @@ public class OrderMemoryRepo implements OrderRepo {
                 return i;
 
         return null;
+    }
+
+    @Override
+    public Order[] search(OrderSearchCondition orderSearchCondition) {
+        if (orderSearchCondition.searchById())
+            return new Order[]{find(orderSearchCondition.getId())};
+        else {
+            Order[] result = new Order[orders.length];
+            int resultIndex = 0;
+
+            for (Order order : orders)
+                if (order != null) {
+                    boolean found = true;
+
+                    if (orderSearchCondition.searchByPrice())
+                        found = orderSearchCondition.getPrice().equals(order.getPrice());
+
+                    if (found) {
+                        result[resultIndex] = order;
+                        resultIndex++;
+                    }
+                }
+
+            if (resultIndex > 0) {
+                Order[] returnableResult = new Order[resultIndex];
+                System.arraycopy(result, 0, returnableResult, 0, resultIndex);
+                return returnableResult;
+            }
+
+            return EMPTY_ORDER_ARRAY;
+        }
     }
 }

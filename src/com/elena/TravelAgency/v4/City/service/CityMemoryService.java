@@ -1,33 +1,33 @@
 package com.elena.TravelAgency.v4.City.service;
 
+import com.elena.TravelAgency.v4.City.repo.CityRepo;
 import com.elena.TravelAgency.v4.City.domain.City;
-import com.elena.TravelAgency.v4.City.repo.CityMemoryRepo;
 
 public class CityMemoryService implements CityService {
-    private final CityMemoryRepo cityMemoryRepo = new CityMemoryRepo();
+    private final CityRepo cityRepo;
 
     public void add(City city) {
         if (city != null)
-            cityMemoryRepo.add(city);
+            cityRepo.add(city);
     }
 
     public void delete(Long id) {
         if ( id != null)
-            cityMemoryRepo.delete(id);
+            cityRepo.delete(id);
     }
 
     public void delete(City city) {
         if (city != null)
-            cityMemoryRepo.delete(city);
+            cityRepo.delete(city);
     }
 
     public void find(Long id) {
         if (id != null)
-            cityMemoryRepo.find(id);
+            cityRepo.find(id);
     }
 
     public void find(String name) {
         if (name != null)
-            cityMemoryRepo.find(name);
+            cityRepo.find(name);
     }
 }

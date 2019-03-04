@@ -1,11 +1,13 @@
 package com.elena.TravelAgency.v4.User.repo;
 
 import com.elena.TravelAgency.v4.User.domain.User;
+import com.elena.TravelAgency.v4.User.search.UserSearchCondition;
 
-import static com.elena.TravelAgency.v3.Storage.Storage.users;
-import static com.elena.TravelAgency.v3.common.utils.ArrayUtils.deleteElement;
+import static com.elena.TravelAgency.v4.Storage.Storage.users;
+import static com.elena.TravelAgency.v4.common.utils.ArrayUtils.deleteElement;
 
-public class UserMemoryRepo implements UserRepo {
+public class UserMemoryArrayRepo implements UserArrayRepo {
+    private static final User[] EMPTY_USER_ARRAY = new User[0];
     private int userIndexInStorage = -1;
 
     public void add(User user) {
@@ -86,5 +88,42 @@ public class UserMemoryRepo implements UserRepo {
                 return i;
 
         return null;
+    }
+
+    @Override
+    public User[] search(UserSearchCondition userSearchCondition) {
+        if (userSearchCondition.searchById())
+            return new User[]{find(userSearchCondition.getId())};
+        else {
+            User[] result = new User[users.length];
+            int resultIndex = 0;
+
+            for (User user : users)
+                if (user != null) {
+                    boolean found = true;
+
+                    if (userSearchCondition.searchByFirstName())
+                        found = userSearchCondition.getFirstName().equals(user.getFirstName());
+
+                    if (found && userSearchCondition.searchByLastName())
+                        found = userSearchCondition.getLastName().equals(user.getLastName());
+
+                    if (found && userSearchCondition.searchByPassport())
+                        found = userSearchCondition.getPassport().equals(user.getPassport());
+
+                    if (found) {
+                        result[resultIndex] = user;
+                        resultIndex++;
+                    }
+                }
+
+            if (resultIndex > 0) {
+                User[] returnableResult = new User[resultIndex];
+                System.arraycopy(result, 0, returnableResult, 0, resultIndex);
+                return returnableResult;
+            }
+
+            return EMPTY_USER_ARRAY;
+        }
     }
 }
