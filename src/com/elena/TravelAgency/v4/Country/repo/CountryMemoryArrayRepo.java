@@ -1,7 +1,5 @@
 package com.elena.TravelAgency.v4.Country.repo;
 
-import com.elena.TravelAgency.v4.City.domain.City;
-import com.elena.TravelAgency.v4.City.search.CitySearchCondition;
 import com.elena.TravelAgency.v4.Country.domain.Country;
 import com.elena.TravelAgency.v4.Country.search.CountrySearchCondition;
 

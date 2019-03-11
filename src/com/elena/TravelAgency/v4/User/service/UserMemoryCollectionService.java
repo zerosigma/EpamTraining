@@ -1,13 +1,26 @@
 package com.elena.TravelAgency.v4.User.service;
 
 import com.elena.TravelAgency.v4.Order.domain.Order;
-import com.elena.TravelAgency.v4.Order.repo.OrderRepo;
+import com.elena.TravelAgency.v4.Order.repo.OrderCollectionRepo;
 import com.elena.TravelAgency.v4.User.domain.User;
-import com.elena.TravelAgency.v4.User.repo.UserRepo;
+import com.elena.TravelAgency.v4.User.repo.UserCollectionRepo;
+import com.elena.TravelAgency.v4.User.search.UserSearchCondition;
 
-public class UserMemoryService implements UserService {
-    private final UserRepo userRepo;
-    private final OrderRepo orderRepo;
+import java.util.List;
+
+public class UserMemoryCollectionService implements UserCollectionService {
+    private final UserCollectionRepo userRepo;
+    private final OrderCollectionRepo orderRepo;
+
+    public UserMemoryCollectionService(UserCollectionRepo userRepo, OrderCollectionRepo orderRepo) {
+        this.userRepo = userRepo;
+        this.orderRepo = orderRepo;
+    }
+
+    @Override
+    public List<User> search(UserSearchCondition userSearchCondition) {
+        return userRepo.search(userSearchCondition);
+    }
 
     public void add(User user) {
         if (user != null) {
@@ -34,13 +47,17 @@ public class UserMemoryService implements UserService {
             userRepo.delete(passport);
     }
 
-    public void find(Long id) {
+    public User find(Long id) {
         if (id != null)
             userRepo.find(id);
+
+        return null;
     }
 
-    public void find(User.Passport passport) {
+    public User find(User.Passport passport) {
         if (passport != null)
             userRepo.find(passport);
+
+        return null;
     }
 }

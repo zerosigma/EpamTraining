@@ -7,5 +7,6 @@ public interface UserService extends BaseService {
     void add(User user);
     void delete(User user);
     void delete(User.Passport passport);
-    void find(User.Passport passport);
+    User find(Long id);
+    User find(User.Passport passport);
 }

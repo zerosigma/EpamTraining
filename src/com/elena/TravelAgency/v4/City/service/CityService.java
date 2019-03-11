@@ -6,5 +6,6 @@ import com.elena.TravelAgency.v4.common.service.BaseService;
 public interface CityService extends BaseService {
     void add(City city);
     void delete(City city);
-    void find(String name);
+    City find(String name);
+    City find(Long id);
 }
