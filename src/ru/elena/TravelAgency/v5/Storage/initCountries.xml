@@ -1,0 +1,79 @@
+<countries>
+    <country type = "COLD">
+        <name>Canada</name>
+        <language>English, French</language>
+        <dialingCode>1</dialingCode>
+        <coldestMonth>JANUARY</coldestMonth>
+        <skiResortsExist>yes</skiResortsExist>
+        <cities>
+            <city>
+            <name>Ottawa</name>
+            <isCapital>yes</isCapital>
+            <climateType>MILD</climateType>
+            </city>
+            <city>
+                <name>Toronto</name>
+                <isCapital>no</isCapital>
+                <climateType>MILD</climateType>
+            </city>
+            <city>
+                <name>Vancouver</name>
+                <isCapital>no</isCapital>
+                <climateType>MILD</climateType>
+            </city>
+        </cities>
+    </country>
+    <country type = "COLD">
+        <name>Russia</name>
+        <language>Russian</language>
+        <dialingCode>7</dialingCode>
+        <coldestMonth>JANUARY</coldestMonth>
+        <skiResortsExist>yes</skiResortsExist>
+        <cities>
+            <city>
+                <name>Moscow</name>
+                <isCapital>yes</isCapital>
+                <climateType>MILD</climateType>
+            </city>
+            <city>
+                <name>Saint Petersburg</name>
+                <isCapital>no</isCapital>
+                <climateType>MILD</climateType>
+            </city>
+        </cities>
+    </country>
+    <country type = "HOT">
+        <name>Egypt</name>
+        <language>Arabic</language>
+        <dialingCode>20</dialingCode>
+        <hottestMonth>JULY</hottestMonth>
+        <averageTemperature>37</averageTemperature>
+        <cities>
+            <city>
+                <name>Cairo</name>
+                <isCapital>yes</isCapital>
+                <climateType>SUBTROPIC</climateType>
+            </city>
+            <city>
+                <name>Hurghada</name>
+                <isCapital>no</isCapital>
+                <climateType>SUBTROPIC</climateType>
+            </city>
+        </cities>
+    </country>
+    <country type = "HOT">
+        <name>Algeria</name>
+        <language>Arabic</language>
+        <dialingCode>21</dialingCode>
+        <hottestMonth>JULY</hottestMonth>
+        <averageTemperature>35</averageTemperature>
+        <cities>
+            <city>
+                <name>Algeria</name>
+                <name>Algeria</name>
+                <isCapital>YES</isCapital>
+                <climateType>SUBTROPIC</climateType>
+            </city>
+        </cities>
+    </country>
+</countries>
