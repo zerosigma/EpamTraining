@@ -24,7 +24,7 @@ public class UserMemoryCollectionService implements UserCollectionService {
         return userRepo.search(userSearchCondition);
     }
 
-    public void insert(User user) {
+    public User insert(User user) {
         if (user != null) {
             userRepo.insert(user);
 
@@ -34,6 +34,8 @@ public class UserMemoryCollectionService implements UserCollectionService {
                     orderRepo.insert(order);
                 }
         }
+
+        return user;
     }
 
     @Override

@@ -1,7 +1,12 @@
 package com.elena.TravelAgency.v5.Country.repo;
 
 import com.elena.TravelAgency.v5.Country.domain.BaseCountry;
+import com.elena.TravelAgency.v5.Country.domain.ColdCountry;
+import com.elena.TravelAgency.v5.Country.domain.CountryDiscriminator;
+import com.elena.TravelAgency.v5.Country.domain.HotCountry;
+import com.elena.TravelAgency.v5.Country.search.ColdCountrySearchCondition;
 import com.elena.TravelAgency.v5.Country.search.CountrySearchCondition;
+import com.elena.TravelAgency.v5.Country.search.HotCountrySearchCondition;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,9 +18,11 @@ import static com.elena.TravelAgency.v5.Storage.Storage.countriesList;
 
 public class CountryMemoryCollectionRepo implements CountryCollectionRepo {
     @Override
-    public void insert(BaseCountry country) {
+    public BaseCountry insert(BaseCountry country) {
         country.setId(generateNextValue());
         countriesList.add(country);
+
+        return country;
     }
 
     @Override
@@ -77,22 +84,73 @@ public class CountryMemoryCollectionRepo implements CountryCollectionRepo {
 
     @Override
     public List<? extends BaseCountry> search(CountrySearchCondition countrySearchCondition) {
-        if (countrySearchCondition.searchById())
-            return Collections.singletonList(findByID(countrySearchCondition.getId()));
-        else {
-            List<BaseCountry> result = new ArrayList<>();
+        List<? extends BaseCountry> searchResult = searchProcess(countrySearchCondition);
 
-            for (BaseCountry country : countriesList) {
-                boolean found = true;
+        return searchResult;
+    }
 
-                if (countrySearchCondition.searchByCountryName())
-                    found = countrySearchCondition.getName().equals(country.getName());
+    private List<? extends BaseCountry> searchProcess(CountrySearchCondition countrySearchCondition) {
+        if (countrySearchCondition.searchByCountryName())
+            return Collections.singletonList(find(countrySearchCondition.getName()));
+        else if (countrySearchCondition.searchByCountryDiscriminator()) {
+            CountryDiscriminator discriminator = countrySearchCondition.getDiscriminator();
+            List<? extends BaseCountry> result = new ArrayList<>();
 
-                if (found)
-                    result.add(country);
+            switch (discriminator) {
+                case COLD: {
+                    result = searchColdCountry((ColdCountrySearchCondition) countrySearchCondition);
+                    break;
+                }
+
+                case HOT: {
+                    result = searchHotCountry((HotCountrySearchCondition) countrySearchCondition);
+                    break;
+                }
             }
 
-            return Collections.emptyList();
+            return result;
         }
+
+        return Collections.emptyList();
+    }
+
+    private List<ColdCountry> searchColdCountry(ColdCountrySearchCondition coldCountrySearchCondition) {
+        List<ColdCountry> result = new ArrayList<>();
+
+        for (BaseCountry country : countriesList)
+            if (CountryDiscriminator.COLD.equals(country.getDiscriminator())) {
+                ColdCountry currentCountry = (ColdCountry) country;
+                boolean found = true;
+
+                if (coldCountrySearchCondition.searchByColdstMonth())
+                    found = coldCountrySearchCondition.getColdestMonth().equals(currentCountry.getColdestMonth());
+
+                if (found && coldCountrySearchCondition.searchBySkiResortsExisting())
+                    found = coldCountrySearchCondition.getSkiResortsExist().equals(currentCountry.skiResortsExist());
+
+                if (found)
+                    result.add(currentCountry);
+            }
+        return result;
+    }
+
+    private List<HotCountry> searchHotCountry(HotCountrySearchCondition hotCountrySearchCondition) {
+        List<HotCountry> result = new ArrayList<>();
+
+        for (BaseCountry country : countriesList)
+            if (CountryDiscriminator.HOT.equals(country.getDiscriminator())) {
+                HotCountry currentCountry = (HotCountry) country;
+                boolean found = true;
+
+                if (hotCountrySearchCondition.searchByHottestMonth())
+                    found = hotCountrySearchCondition.getHottestMonth().equals(currentCountry.getHottestMonth());
+
+                if (found && hotCountrySearchCondition.searchByAverageTemperature())
+                    found = hotCountrySearchCondition.getAverageTemperature().equals(currentCountry.getAverageTemperature());
+
+                if (found)
+                    result.add(currentCountry);
+            }
+        return result;
     }
 }

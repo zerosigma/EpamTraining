@@ -1,6 +1,7 @@
 package com.elena.TravelAgency.v5.Storage.initializer.parse.stax;
 
 import com.elena.TravelAgency.v5.City.domain.City;
+import com.elena.TravelAgency.v5.City.domain.ClimateType;
 import com.elena.TravelAgency.v5.Country.domain.BaseCountry;
 import com.elena.TravelAgency.v5.Country.domain.ColdCountry;
 import com.elena.TravelAgency.v5.Country.domain.CountryDiscriminator;
@@ -9,7 +10,7 @@ import com.elena.TravelAgency.v5.Storage.initializer.exception.InitializingDataE
 import com.elena.TravelAgency.v5.Storage.initializer.exception.checked.InvalidCountryDiscriminatorException;
 import com.elena.TravelAgency.v5.Storage.initializer.exception.uncheked.InvalidXmlDocumentStructureException;
 import com.elena.TravelAgency.v5.Storage.initializer.parse.FileParser;
-import com.elena.TravelAgency.v5.Storage.initializer.exception.checked.SourceFileNotExistingException;
+import com.elena.TravelAgency.v5.Storage.initializer.exception.uncheked.SourceFileNotExistingException;
 import com.elena.TravelAgency.v5.common.solution.xml.stax.CustomStaxReader;
 
 import javax.xml.stream.XMLStreamException;
@@ -32,8 +33,7 @@ public class CountriesWithCitiesStaxXmlParser implements FileParser<List<BaseCou
                 return readDocument(customStaxReader.getReader());
             }
         else
-            throw new SourceFileNotExistingException(InitializingDataExceptionMeta.SOURCE_FILE_NOT_FOUND_ERROR.getCode(),
-                                                     InitializingDataExceptionMeta.SOURCE_FILE_NOT_FOUND_ERROR.getDescription());
+            throw new SourceFileNotExistingException(InitializingDataExceptionMeta.SOURCE_FILE_NOT_FOUND_ERROR);
     }
 
     private List<BaseCountry> readDocument(XMLStreamReader reader) throws XMLStreamException, InvalidCountryDiscriminatorException {
@@ -57,8 +57,7 @@ public class CountriesWithCitiesStaxXmlParser implements FileParser<List<BaseCou
                 }
             }
         }
-        throw new InvalidXmlDocumentStructureException(InitializingDataExceptionMeta.XML_END_TAG_NOT_FOUND_ERROR.getCode(),
-                                                       InitializingDataExceptionMeta.XML_END_TAG_NOT_FOUND_ERROR.getDescription());
+        throw new InvalidXmlDocumentStructureException(InitializingDataExceptionMeta.XML_END_TAG_NOT_FOUND_ERROR);
     }
 
     private List<BaseCountry> readCountries(XMLStreamReader reader) throws XMLStreamException, InvalidCountryDiscriminatorException {
@@ -82,8 +81,7 @@ public class CountriesWithCitiesStaxXmlParser implements FileParser<List<BaseCou
                 }
             }
         }
-        throw new InvalidXmlDocumentStructureException(InitializingDataExceptionMeta.XML_END_TAG_NOT_FOUND_ERROR.getCode(),
-                                                       InitializingDataExceptionMeta.XML_END_TAG_NOT_FOUND_ERROR.getDescription());
+        throw new InvalidXmlDocumentStructureException(InitializingDataExceptionMeta.XML_END_TAG_NOT_FOUND_ERROR);
     }
 
     private BaseCountry readCountry(XMLStreamReader reader) throws XMLStreamException, InvalidCountryDiscriminatorException {
@@ -112,8 +110,7 @@ public class CountriesWithCitiesStaxXmlParser implements FileParser<List<BaseCou
                 }
             }
         }
-        throw new InvalidXmlDocumentStructureException(InitializingDataExceptionMeta.XML_END_TAG_NOT_FOUND_ERROR.getCode(),
-                                                       InitializingDataExceptionMeta.XML_END_TAG_NOT_FOUND_ERROR.getDescription());
+        throw new InvalidXmlDocumentStructureException(InitializingDataExceptionMeta.XML_END_TAG_NOT_FOUND_ERROR);
     }
 
     private List<City> readCities(XMLStreamReader reader) throws XMLStreamException, InvalidCountryDiscriminatorException {
@@ -137,8 +134,7 @@ public class CountriesWithCitiesStaxXmlParser implements FileParser<List<BaseCou
                 }
             }
         }
-        throw new InvalidXmlDocumentStructureException(InitializingDataExceptionMeta.XML_END_TAG_NOT_FOUND_ERROR.getCode(),
-                                                       InitializingDataExceptionMeta.XML_END_TAG_NOT_FOUND_ERROR.getDescription());
+        throw new InvalidXmlDocumentStructureException(InitializingDataExceptionMeta.XML_END_TAG_NOT_FOUND_ERROR);
     }
 
     private City readCity(XMLStreamReader reader) throws XMLStreamException, InvalidCountryDiscriminatorException {
@@ -157,8 +153,8 @@ public class CountriesWithCitiesStaxXmlParser implements FileParser<List<BaseCou
                         city.setCapital("yes".equals(readContent(reader).toLowerCase()));
                     else if ("climateType".equals(tagName)) {
                         String climateType = readContent(reader);
-                        if (City.ClimateType.isStrClimateNameExisting(climateType))
-                            city.setClimateType(City.ClimateType.valueOf(climateType));
+                        if (ClimateType.isStrClimateNameExisting(climateType))
+                            city.setClimateType(ClimateType.valueOf(climateType));
                     }
 
                     break;
@@ -169,8 +165,7 @@ public class CountriesWithCitiesStaxXmlParser implements FileParser<List<BaseCou
                 }
             }
         }
-        throw new InvalidXmlDocumentStructureException(InitializingDataExceptionMeta.XML_END_TAG_NOT_FOUND_ERROR.getCode(),
-                                                       InitializingDataExceptionMeta.XML_END_TAG_NOT_FOUND_ERROR.getDescription());
+        throw new InvalidXmlDocumentStructureException(InitializingDataExceptionMeta.XML_END_TAG_NOT_FOUND_ERROR);
     }
 
     private BaseCountry createCountry(String countryType) throws InvalidCountryDiscriminatorException {
@@ -181,11 +176,10 @@ public class CountriesWithCitiesStaxXmlParser implements FileParser<List<BaseCou
                 return new HotCountry();
         }
         else
-            throw new InvalidCountryDiscriminatorException(InitializingDataExceptionMeta.PARSE_COUNTRY_DISCRIMINATOR_ERROR.getCode(),
-                                                           InitializingDataExceptionMeta.PARSE_COUNTRY_DISCRIMINATOR_ERROR.getDescription());
+            throw new InvalidCountryDiscriminatorException(InitializingDataExceptionMeta.PARSE_COUNTRY_DISCRIMINATOR_ERROR);
     }
 
-    private void readBasicCountryAttributes(BaseCountry country, String tagName, XMLStreamReader reader) throws XMLStreamException {
+    private void readBasicCountryAttributes(BaseCountry country, String tagName, XMLStreamReader reader) throws XMLStreamException, InvalidCountryDiscriminatorException {
         switch (tagName) {
             case "name": {
                 country.setName(readContent(reader));

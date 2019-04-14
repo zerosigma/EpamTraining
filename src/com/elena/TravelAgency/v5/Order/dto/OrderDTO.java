@@ -1,33 +1,33 @@
 package com.elena.TravelAgency.v5.Order.dto;
 
-import com.elena.TravelAgency.v5.City.domain.City;
+import com.elena.TravelAgency.v5.City.dto.CityDTO;
 import com.elena.TravelAgency.v5.Order.domain.Currency;
-import com.elena.TravelAgency.v5.User.domain.User;
+import com.elena.TravelAgency.v5.User.dto.UserDTO;
 import com.elena.TravelAgency.v5.common.business.dto.BaseDTO;
 
 import java.util.List;
 
 public class OrderDTO extends BaseDTO<Long> {
-    private User user;
+    private UserDTO user;
     private Integer price;
     private Currency currency;
-    private List<City> citiesInOrder;
+    private List<CityDTO> citiesInOrder;
 
     public OrderDTO() {}
 
-    public User getUser() {
+    public UserDTO getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserDTO user) {
         this.user = user;
     }
 
-    public List<City> getCitiesInOrder() {
+    public List<CityDTO> getCitiesInOrder() {
         return citiesInOrder;
     }
 
-    public void setCitiesInOrder(List<City> citiesInOrder) {
+    public void setCitiesInOrder(List<CityDTO> citiesInOrder) {
         this.citiesInOrder = citiesInOrder;
     }
 

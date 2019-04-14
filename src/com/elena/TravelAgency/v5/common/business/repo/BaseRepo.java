@@ -4,7 +4,7 @@ import java.util.Collection;
 
 public interface BaseRepo<TYPE, ID> {
     void deleteByID(ID id);
-    void insert(TYPE entity);
+    TYPE insert(TYPE entity);
     void insert(Collection<TYPE> entities);
     void delete(TYPE entity);
     void update(TYPE entity);

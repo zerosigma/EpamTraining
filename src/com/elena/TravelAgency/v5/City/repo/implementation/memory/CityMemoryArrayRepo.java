@@ -1,6 +1,7 @@
-package com.elena.TravelAgency.v5.City.repo;
+package com.elena.TravelAgency.v5.City.repo.implementation.memory;
 
 import com.elena.TravelAgency.v5.City.domain.City;
+import com.elena.TravelAgency.v5.City.repo.CityArrayRepo;
 import com.elena.TravelAgency.v5.City.search.CitySearchCondition;
 
 import java.util.Collection;
@@ -13,17 +14,17 @@ public class CityMemoryArrayRepo implements CityArrayRepo {
     private int cityIndexInStorage = -1;
 
     @Override
-    public void insert(City city) {
-        if (findIndex(city) == null) {
-            if (cityIndexInStorage == cities.length - 1) {
-                City[] newCities = new City[cities.length * 2];
-                System.arraycopy(cities, 0, newCities, 0, cities.length);
-                cities = newCities;
-            }
-
-            cityIndexInStorage++;
-            cities[cityIndexInStorage] = city;
+    public City insert(City city) {
+        if (cityIndexInStorage == cities.length - 1) {
+            City[] newCities = new City[cities.length * 2];
+            System.arraycopy(cities, 0, newCities, 0, cities.length);
+            cities = newCities;
         }
+
+        cityIndexInStorage++;
+        cities[cityIndexInStorage] = city;
+
+        return city;
     }
 
     @Override

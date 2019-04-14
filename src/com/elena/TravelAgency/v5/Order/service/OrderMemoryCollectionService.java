@@ -19,9 +19,10 @@ public class OrderMemoryCollectionService implements OrderCollectionService {
         return orderRepo.search(orderSearchCondition);
     }
 
-    public void insert(Order order) {
+    public Order insert(Order order) {
         if (order != null)
             orderRepo.insert(order);
+        return order;
     }
 
     @Override

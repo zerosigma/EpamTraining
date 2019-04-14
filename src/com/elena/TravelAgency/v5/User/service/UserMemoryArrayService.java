@@ -18,7 +18,7 @@ public class UserMemoryArrayService implements UserArrayService {
         this.orderRepo = orderRepo;
     }
 
-    public void insert(User user) {
+    public User insert(User user) {
         if (user != null) {
             userRepo.insert(user);
 
@@ -28,6 +28,8 @@ public class UserMemoryArrayService implements UserArrayService {
                     orderRepo.insert(order);
                 }
         }
+
+        return user;
     }
 
     @Override

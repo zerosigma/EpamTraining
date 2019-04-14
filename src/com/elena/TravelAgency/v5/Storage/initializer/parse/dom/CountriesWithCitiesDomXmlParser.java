@@ -1,11 +1,12 @@
 package com.elena.TravelAgency.v5.Storage.initializer.parse.dom;
 
 import com.elena.TravelAgency.v5.City.domain.City;
+import com.elena.TravelAgency.v5.City.domain.ClimateType;
 import com.elena.TravelAgency.v5.Country.domain.*;
 import com.elena.TravelAgency.v5.Storage.initializer.exception.InitializingDataExceptionMeta;
 import com.elena.TravelAgency.v5.Storage.initializer.exception.checked.InvalidCountryDiscriminatorException;
 import com.elena.TravelAgency.v5.Storage.initializer.parse.FileParser;
-import com.elena.TravelAgency.v5.Storage.initializer.exception.checked.SourceFileNotExistingException;
+import com.elena.TravelAgency.v5.Storage.initializer.exception.uncheked.SourceFileNotExistingException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -35,8 +36,7 @@ public class CountriesWithCitiesDomXmlParser implements FileParser<List<BaseCoun
             return loadedCountries;
         }
         else
-            throw new SourceFileNotExistingException(InitializingDataExceptionMeta.SOURCE_FILE_NOT_FOUND_ERROR.getCode(),
-                                                     InitializingDataExceptionMeta.SOURCE_FILE_NOT_FOUND_ERROR.getDescription());
+            throw new SourceFileNotExistingException(InitializingDataExceptionMeta.SOURCE_FILE_NOT_FOUND_ERROR);
     }
 
     private BaseCountry getCountryFromXml(Element country) throws Exception {
@@ -70,8 +70,7 @@ public class CountriesWithCitiesDomXmlParser implements FileParser<List<BaseCoun
             return countryObject;
         }
         else
-            throw new InvalidCountryDiscriminatorException(InitializingDataExceptionMeta.PARSE_COUNTRY_DISCRIMINATOR_ERROR.getCode(),
-                                                           InitializingDataExceptionMeta.PARSE_COUNTRY_DISCRIMINATOR_ERROR.getDescription());
+            throw new InvalidCountryDiscriminatorException(InitializingDataExceptionMeta.PARSE_COUNTRY_DISCRIMINATOR_ERROR);
     }
 
     private City getCityFromXml(Element city) throws Exception {
@@ -82,8 +81,8 @@ public class CountriesWithCitiesDomXmlParser implements FileParser<List<BaseCoun
         cityObject.setCapital("yes".equals(isCapital.toLowerCase()));
 
         String climateType = getSingleElementTextContent(city, "climateType");
-        if (City.ClimateType.isStrClimateNameExisting(climateType))
-            cityObject.setClimateType(City.ClimateType.valueOf(climateType));
+        if (ClimateType.isStrClimateNameExisting(climateType))
+            cityObject.setClimateType(ClimateType.valueOf(climateType));
         else
             throw new Exception();
 

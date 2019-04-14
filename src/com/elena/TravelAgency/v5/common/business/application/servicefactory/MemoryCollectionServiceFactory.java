@@ -1,7 +1,7 @@
 package com.elena.TravelAgency.v5.common.business.application.servicefactory;
 
-import com.elena.TravelAgency.v5.City.repo.CityMemoryCollectionRepo;
-import com.elena.TravelAgency.v5.City.service.CityMemoryCollectionService;
+import com.elena.TravelAgency.v5.City.repo.implementation.memory.CityMemoryCollectionRepo;
+import com.elena.TravelAgency.v5.City.service.implementation.memory.CityMemoryCollectionService;
 import com.elena.TravelAgency.v5.City.service.CityService;
 import com.elena.TravelAgency.v5.Country.repo.CountryMemoryCollectionRepo;
 import com.elena.TravelAgency.v5.Country.service.CountryMemoryCollectionService;

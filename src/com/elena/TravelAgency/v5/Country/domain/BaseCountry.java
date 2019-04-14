@@ -20,6 +20,10 @@ public abstract class BaseCountry extends BaseDomain<Long> {
 
     protected abstract void initDiscriminator();
 
+    public CountryDiscriminator getDiscriminator() {
+        return discriminator;
+    }
+
     public String getName() {
         return name;
     }

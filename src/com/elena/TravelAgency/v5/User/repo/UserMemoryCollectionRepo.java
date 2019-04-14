@@ -15,36 +15,40 @@ import static com.elena.TravelAgency.v5.Storage.Storage.usersList;
 public class UserMemoryCollectionRepo implements UserCollectionRepo {
     @Override
     public List<? extends User> search(UserSearchCondition userSearchCondition) {
-        if (userSearchCondition.searchById())
-            return Collections.singletonList(findByID(userSearchCondition.getId()));
-        else {
-            List<User> result = new ArrayList<>();
+        List<? extends User> searchResult = searchProcess(userSearchCondition);
 
-            for (User user : usersList) {
-                boolean found = true;
+        return searchResult;
+    }
 
-                if (userSearchCondition.searchByFirstName())
-                    found = userSearchCondition.getFirstName().equals(user.getFirstName());
+    private List<? extends  User> searchProcess(UserSearchCondition userSearchCondition) {
+        List<User> result = new ArrayList<>();
 
-                if (found && userSearchCondition.searchByLastName())
-                    found = userSearchCondition.getLastName().equals(user.getLastName());
+        for (User user : usersList) {
+            boolean found = true;
 
-                if (found && userSearchCondition.searchByPassport())
-                    found = userSearchCondition.getPassport().equals(user.getPassport());
+            if (userSearchCondition.searchByFirstName())
+                found = userSearchCondition.getFirstName().equals(user.getFirstName());
 
-                if (found) {
-                    result.add(user);
-                }
+            if (found && userSearchCondition.searchByLastName())
+                found = userSearchCondition.getLastName().equals(user.getLastName());
+
+            if (found && userSearchCondition.searchByPassport())
+                found = userSearchCondition.getPassport().equals(user.getPassport());
+
+            if (found) {
+                result.add(user);
             }
-
-            return Collections.emptyList();
         }
+
+        return result;
     }
 
     @Override
-    public void insert(User user) {
+    public User insert(User user) {
         user.setId(generateNextValue());
         usersList.add(user);
+
+        return user;
     }
 
     @Override

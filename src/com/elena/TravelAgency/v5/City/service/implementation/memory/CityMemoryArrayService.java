@@ -1,22 +1,23 @@
-package com.elena.TravelAgency.v5.City.service;
+package com.elena.TravelAgency.v5.City.service.implementation.memory;
 
 import com.elena.TravelAgency.v5.City.domain.City;
-import com.elena.TravelAgency.v5.City.repo.CityCollectionRepo;
+import com.elena.TravelAgency.v5.City.repo.CityArrayRepo;
 import com.elena.TravelAgency.v5.City.search.CitySearchCondition;
+import com.elena.TravelAgency.v5.City.service.CityArrayService;
 
 import java.util.Collection;
-import java.util.List;
 
-public class CityMemoryCollectionService implements CityCollectionService {
-    private final CityCollectionRepo cityRepo;
+public class CityMemoryArrayService implements CityArrayService {
+    private final CityArrayRepo cityRepo;
 
-    public CityMemoryCollectionService(CityCollectionRepo cityRepo) {
+    public CityMemoryArrayService(CityArrayRepo cityRepo) {
         this.cityRepo = cityRepo;
     }
 
-    public void insert(City city) {
+    public City insert(City city) {
         if (city != null)
             cityRepo.insert(city);
+        return city;
     }
 
     @Override
@@ -50,13 +51,13 @@ public class CityMemoryCollectionService implements CityCollectionService {
 
     public City find(String name) {
         if (name != null)
-            return cityRepo.find(name);
+           return cityRepo.find(name);
 
         return null;
     }
 
     @Override
-    public List<City> search(CitySearchCondition citySearchCondition) {
+    public City[] search(CitySearchCondition citySearchCondition) {
         return cityRepo.search(citySearchCondition);
     }
 }

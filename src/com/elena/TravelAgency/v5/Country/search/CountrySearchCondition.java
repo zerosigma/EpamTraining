@@ -7,7 +7,6 @@ import static com.elena.TravelAgency.v4.common.utils.StringUtils.isNotEmptyStrin
 
 public class CountrySearchCondition extends BaseSearchCondition<Long> {
     private String name;
-    private String language;
     private CountryDiscriminator discriminator;
 
     public CountryDiscriminator getDiscriminator() {
@@ -26,20 +25,8 @@ public class CountrySearchCondition extends BaseSearchCondition<Long> {
         this.name = name;
     }
 
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
     public boolean searchByCountryName() {
         return isNotEmptyString(name);
-    }
-
-    public boolean searchByLanguage() {
-        return isNotEmptyString(language);
     }
 
     public boolean searchByCountryDiscriminator() {

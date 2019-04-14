@@ -13,9 +13,11 @@ public class OrderMemoryArrayService implements OrderArrayService {
         this.orderRepo = orderRepo;
     }
 
-    public void insert(Order order) {
+    public Order insert(Order order) {
         if (order != null)
             orderRepo.insert(order);
+
+        return order;
     }
 
     @Override

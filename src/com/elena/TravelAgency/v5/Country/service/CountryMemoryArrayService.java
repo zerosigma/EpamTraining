@@ -17,7 +17,7 @@ public class CountryMemoryArrayService implements CountryArrayService {
         this.cityRepo = cityRepo;
     }
 
-    public void insert(BaseCountry country) {
+    public BaseCountry insert(BaseCountry country) {
         if (country != null) {
             countryRepo.insert(country);
 
@@ -27,6 +27,8 @@ public class CountryMemoryArrayService implements CountryArrayService {
                     cityRepo.insert(city);
                 }
         }
+
+        return country;
     }
 
     @Override

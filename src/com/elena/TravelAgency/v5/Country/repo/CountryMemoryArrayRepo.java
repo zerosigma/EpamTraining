@@ -12,17 +12,17 @@ public class CountryMemoryArrayRepo implements CountryArrayRepo {
     private static final BaseCountry[] EMPTY_COUNTRY_ARRAY = new BaseCountry[0];
     private int countryIndexInStorage = -1;
 
-    public void insert(BaseCountry country) {
-        if (findIndex(country) == null) {
-            if (countryIndexInStorage == countries.length - 1) {
-                BaseCountry[] newCountries = new BaseCountry[countries.length * 2];
-                System.arraycopy(countries, 0, newCountries, 0, countries.length);
-                countries = newCountries;
-            }
-
-            countryIndexInStorage++;
-            countries[countryIndexInStorage] = country;
+    public BaseCountry insert(BaseCountry country) {
+        if (countryIndexInStorage == countries.length - 1) {
+            BaseCountry[] newCountries = new BaseCountry[countries.length * 2];
+            System.arraycopy(countries, 0, newCountries, 0, countries.length);
+            countries = newCountries;
         }
+
+        countryIndexInStorage++;
+        countries[countryIndexInStorage] = country;
+
+        return country;
     }
 
     @Override

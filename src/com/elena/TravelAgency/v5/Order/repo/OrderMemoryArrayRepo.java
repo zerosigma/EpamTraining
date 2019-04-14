@@ -12,17 +12,17 @@ public class OrderMemoryArrayRepo implements OrderArrayRepo {
     private static final Order[] EMPTY_ORDER_ARRAY = new Order[0];
     private int orderIndexInStorage = -1;
 
-    public void insert(Order order) {
-        if (findIndex(order) == null) {
-            if (orderIndexInStorage == orders.length - 1) {
-                Order[] newOrders = new Order[orders.length * 2];
-                System.arraycopy(orders, 0, newOrders, 0, orders.length);
-                orders = newOrders;
-            }
-
-            orderIndexInStorage++;
-            orders[orderIndexInStorage] = order;
+    public Order insert(Order order) {
+        if (orderIndexInStorage == orders.length - 1) {
+            Order[] newOrders = new Order[orders.length * 2];
+            System.arraycopy(orders, 0, newOrders, 0, orders.length);
+            orders = newOrders;
         }
+
+        orderIndexInStorage++;
+        orders[orderIndexInStorage] = order;
+
+        return order;
     }
 
     public void deleteByID(Long id) {

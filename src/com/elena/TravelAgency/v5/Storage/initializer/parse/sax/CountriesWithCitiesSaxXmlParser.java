@@ -3,7 +3,7 @@ package com.elena.TravelAgency.v5.Storage.initializer.parse.sax;
 import com.elena.TravelAgency.v5.Country.domain.BaseCountry;
 import com.elena.TravelAgency.v5.Storage.initializer.exception.InitializingDataExceptionMeta;
 import com.elena.TravelAgency.v5.Storage.initializer.parse.FileParser;
-import com.elena.TravelAgency.v5.Storage.initializer.exception.checked.SourceFileNotExistingException;
+import com.elena.TravelAgency.v5.Storage.initializer.exception.uncheked.SourceFileNotExistingException;
 
 import javax.xml.parsers.SAXParser;
 import java.util.List;
@@ -22,7 +22,6 @@ public class CountriesWithCitiesSaxXmlParser implements FileParser<List<BaseCoun
             return handler.getParsedCountries();
         }
         else
-            throw new SourceFileNotExistingException(InitializingDataExceptionMeta.SOURCE_FILE_NOT_FOUND_ERROR.getCode(),
-                                                     InitializingDataExceptionMeta.SOURCE_FILE_NOT_FOUND_ERROR.getDescription());
+            throw new SourceFileNotExistingException(InitializingDataExceptionMeta.SOURCE_FILE_NOT_FOUND_ERROR);
     }
 }

@@ -1,23 +1,28 @@
-package com.elena.TravelAgency.v5.City.repo;
+package com.elena.TravelAgency.v5.City.repo.implementation.memory;
 
 import com.elena.TravelAgency.v5.City.domain.City;
+import com.elena.TravelAgency.v5.City.repo.CityCollectionRepo;
+import com.elena.TravelAgency.v5.City.search.CityOrderProvider;
 import com.elena.TravelAgency.v5.City.search.CitySearchCondition;
 import com.elena.TravelAgency.v5.Storage.GlobalIDGenerator;
 import com.elena.TravelAgency.v5.Storage.SequenceGenerator;
+import com.elena.TravelAgency.v5.common.business.search.Paginator;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.elena.TravelAgency.v5.Storage.GlobalIDGenerator.generateNextValue;
 import static com.elena.TravelAgency.v5.Storage.Storage.citiesList;
+import static com.elena.TravelAgency.v5.common.solution.utils.CollectionUtils.nextPageWithData;
 
 public class CityMemoryCollectionRepo implements CityCollectionRepo {
+    private CityOrderProvider cityOrderProvider = new CityOrderProvider();
+
     @Override
-    public void insert(City city) {
+    public City insert(City city) {
         city.setId(generateNextValue());
         citiesList.add(city);
+
+        return city;
     }
 
     @Override
@@ -78,22 +83,38 @@ public class CityMemoryCollectionRepo implements CityCollectionRepo {
 
     @Override
     public List<City> search(CitySearchCondition citySearchCondition) {
-        if (citySearchCondition.searchById())
-            return Collections.singletonList(findByID(citySearchCondition.getId()));
-        else {
-            List<City> result = new ArrayList<>();
+        List<City> searchResult = searchProcess(citySearchCondition);
 
-            for (City city : citiesList) {
-                boolean found = true;
+        boolean needApplyOrder = !searchResult.isEmpty() && citySearchCondition.needOrdering();
+        if (needApplyOrder)
+            cityOrderProvider.applyOrdering(searchResult, citySearchCondition);
 
-                if (citySearchCondition.searchByCityName())
-                    found = citySearchCondition.getName().equals(city.getName());
+        if (!searchResult.isEmpty() && citySearchCondition.needPaginate())
+            searchResult = getDataByPage(searchResult, citySearchCondition.getPaginator());
 
-                if (found)
-                    result.add(city);
-            }
+        return searchResult;
+    }
 
-            return Collections.emptyList();
+    private List<City> searchProcess(CitySearchCondition citySearchCondition) {
+        List<City> result = new ArrayList<>();
+
+        for (City city : citiesList) {
+            boolean found = true;
+
+            if (citySearchCondition.searchByCityName())
+                found = citySearchCondition.getName().equals(city.getName());
+
+            if (found && citySearchCondition.searchByClimateType())
+                found = citySearchCondition.getClimateType().name().equals(city.getClimateType().name());
+
+            if (found)
+                result.add(city);
         }
+
+        return result;
+    }
+
+    private List<City> getDataByPage(List<City> cities, Paginator paginator) {
+        return nextPageWithData(cities, paginator.getOffset(), paginator.getLimit());
     }
 }

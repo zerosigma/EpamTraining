@@ -1,6 +1,6 @@
 package com.elena.TravelAgency.v5.Country.dto;
 
-import com.elena.TravelAgency.v5.City.domain.City;
+import com.elena.TravelAgency.v5.City.dto.CityDTO;
 import com.elena.TravelAgency.v5.Country.domain.CountryDiscriminator;
 import com.elena.TravelAgency.v5.common.business.dto.BaseDTO;
 
@@ -13,7 +13,7 @@ public abstract class BaseCountryDTO extends BaseDTO<Long> {
 
     protected CountryDiscriminator discriminator;
 
-    private List<City> cities;
+    private List<CityDTO> cities;
 
     public BaseCountryDTO() {
         initDiscriminator();
@@ -45,11 +45,11 @@ public abstract class BaseCountryDTO extends BaseDTO<Long> {
         this.dialingCode = dialingCode;
     }
 
-    public List<City> getCities() {
+    public List<CityDTO> getCities() {
         return cities;
     }
 
-    public void setCities(List<City> cities) {
+    public void setCities(List<CityDTO> cities) {
         this.cities = cities;
     }
 }

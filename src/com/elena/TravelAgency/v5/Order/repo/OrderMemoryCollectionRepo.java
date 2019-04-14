@@ -1,5 +1,6 @@
 package com.elena.TravelAgency.v5.Order.repo;
 
+import com.elena.TravelAgency.v5.City.domain.City;
 import com.elena.TravelAgency.v5.Order.domain.Order;
 import com.elena.TravelAgency.v5.Order.search.OrderSearchCondition;
 
@@ -14,29 +15,58 @@ import static com.elena.TravelAgency.v5.Storage.Storage.ordersList;
 public class OrderMemoryCollectionRepo implements OrderCollectionRepo {
     @Override
     public List<Order> search(OrderSearchCondition orderSearchCondition) {
-        if (orderSearchCondition.searchById())
-            return Collections.singletonList(findByID(orderSearchCondition.getId()));
-        else {
-            List<Order> result = new ArrayList<>();
+        List<Order> searchResult = searchProcess(orderSearchCondition);
 
-            for (Order order: ordersList) {
-                boolean found = true;
+        return searchResult;
+    }
 
-                if (orderSearchCondition.searchByPrice())
-                    found = orderSearchCondition.getPrice().equals(order.getPrice());
+    private List<Order> searchProcess(OrderSearchCondition orderSearchCondition) {
+        List<Order> result = new ArrayList<>();
 
-                if (found)
-                    result.add(order);
-            }
+        for (Order order : ordersList) {
+            boolean found = true;
 
-            return Collections.emptyList();
+            if (orderSearchCondition.searchByUser())
+                found = orderSearchCondition.getUserID().equals(order.getUser().getId());
+
+            if (found && orderSearchCondition.searchByPrice())
+                found = orderSearchCondition.getPrice().equals(order.getPrice());
+
+            if (found && orderSearchCondition.searchByCity())
+                found = findCityByID(order, orderSearchCondition.getCityID());
+
+            if (found && orderSearchCondition.searchByCountry())
+                found = findCountryByID(order, orderSearchCondition.getCountryID());
+
+            if (found)
+                result.add(order);
         }
+
+        return result;
+    }
+
+    private boolean findCityByID(Order order, Long cityId) {
+        for (City city : order.getCitiesInOrder())
+            if (cityId.equals(city.getId()))
+                return true;
+
+        return false;
+    }
+
+    private boolean findCountryByID(Order order, Long countryId) {
+        for (City city : order.getCitiesInOrder())
+            if (countryId.equals(city.getIdCountry()))
+                return true;
+
+        return false;
     }
 
     @Override
-    public void insert(Order order) {
+    public Order insert(Order order) {
         order.setId(generateNextValue());
         ordersList.add(order);
+
+        return order;
     }
 
     @Override
@@ -86,5 +116,33 @@ public class OrderMemoryCollectionRepo implements OrderCollectionRepo {
                 return order;
 
         return null;
+    }
+
+    @Override
+    public int countOrdersWithCity(long cityId) {
+        int count = 0;
+
+        for (Order order : ordersList)
+            for (City city : order.getCitiesInOrder())
+                if (city.getId() == cityId) {
+                    count++;
+                    break;
+                }
+
+        return count;
+    }
+
+    @Override
+    public int countOrdersWithCountry(long countryId) {
+        int count = 0;
+
+        for (Order order : ordersList)
+            for (City city : order.getCitiesInOrder())
+                if (city.getIdCountry() == countryId) {
+                    count++;
+                    break;
+                }
+
+        return count;
     }
 }
