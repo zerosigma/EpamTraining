@@ -94,22 +94,26 @@ public class CityMemoryCollectionRepo implements CityCollectionRepo {
     }
 
     private List<City> searchProcess(CitySearchCondition citySearchCondition) {
-        List<City> result = new ArrayList<>();
+        if (citySearchCondition.searchById())
+            return Collections.singletonList(findByIndex(citySearchCondition.getId()));
+        else {
+            List<City> result = new ArrayList<>();
 
-        for (City city : Storage.citiesList) {
-            boolean found = true;
+            for (City city : Storage.citiesList) {
+                boolean found = true;
 
-            if (citySearchCondition.searchByCityName())
-                found = citySearchCondition.getName().equals(city.getName());
+                if (citySearchCondition.searchByCityName())
+                    found = citySearchCondition.getName().equals(city.getName());
 
-            if (found && citySearchCondition.searchByClimateType())
-                found = citySearchCondition.getClimateType().name().equals(city.getClimateType().name());
+                if (found && citySearchCondition.searchByClimateType())
+                    found = citySearchCondition.getClimateType().name().equals(city.getClimateType().name());
 
-            if (found)
-                result.add(city);
+                if (found)
+                    result.add(city);
+            }
+
+            return result;
         }
-
-        return result;
     }
 
     private List<City> getDataByPage(List<City> cities, Paginator paginator) {

@@ -7,6 +7,7 @@ import ru.elena.TravelAgency.v5.Storage.Storage;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static ru.elena.TravelAgency.v5.Storage.GlobalIDGenerator.generateNextValue;
@@ -20,26 +21,30 @@ public class UserMemoryCollectionRepo implements UserCollectionRepo {
     }
 
     private List<? extends  User> searchProcess(UserSearchCondition userSearchCondition) {
-        List<User> result = new ArrayList<>();
+        if (userSearchCondition.searchById())
+            return Collections.singletonList(findByIndex(userSearchCondition.getId()));
+        else {
+            List<User> result = new ArrayList<>();
 
-        for (User user : Storage.usersList) {
-            boolean found = true;
+            for (User user : Storage.usersList) {
+                boolean found = true;
 
-            if (userSearchCondition.searchByFirstName())
-                found = userSearchCondition.getFirstName().equals(user.getFirstName());
+                if (userSearchCondition.searchByFirstName())
+                    found = userSearchCondition.getFirstName().equals(user.getFirstName());
 
-            if (found && userSearchCondition.searchByLastName())
-                found = userSearchCondition.getLastName().equals(user.getLastName());
+                if (found && userSearchCondition.searchByLastName())
+                    found = userSearchCondition.getLastName().equals(user.getLastName());
 
-            if (found && userSearchCondition.searchByPassport())
-                found = userSearchCondition.getPassport().equals(user.getPassport());
+                if (found && userSearchCondition.searchByPassport())
+                    found = userSearchCondition.getPassport().equals(user.getPassport());
 
-            if (found) {
-                result.add(user);
+                if (found) {
+                    result.add(user);
+                }
             }
-        }
 
-        return result;
+            return result;
+        }
     }
 
     @Override

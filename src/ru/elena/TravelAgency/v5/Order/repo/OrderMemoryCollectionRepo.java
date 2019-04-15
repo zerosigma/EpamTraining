@@ -6,6 +6,7 @@ import ru.elena.TravelAgency.v5.Order.search.OrderSearchCondition;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static ru.elena.TravelAgency.v5.Storage.GlobalIDGenerator.generateNextValue;
@@ -20,28 +21,32 @@ public class OrderMemoryCollectionRepo implements OrderCollectionRepo {
     }
 
     private List<Order> searchProcess(OrderSearchCondition orderSearchCondition) {
-        List<Order> result = new ArrayList<>();
+        if (orderSearchCondition.searchById())
+            return Collections.singletonList(findByIndex(orderSearchCondition.getId()));
+        else {
+            List<Order> result = new ArrayList<>();
 
-        for (Order order : ordersList) {
-            boolean found = true;
+            for (Order order : ordersList) {
+                boolean found = true;
 
-            if (orderSearchCondition.searchByUser())
-                found = orderSearchCondition.getUserID().equals(order.getUser().getId());
+                if (orderSearchCondition.searchByUser())
+                    found = orderSearchCondition.getUserID().equals(order.getUser().getId());
 
-            if (found && orderSearchCondition.searchByPrice())
-                found = orderSearchCondition.getPrice().equals(order.getPrice());
+                if (found && orderSearchCondition.searchByPrice())
+                    found = orderSearchCondition.getPrice().equals(order.getPrice());
 
-            if (found && orderSearchCondition.searchByCity())
-                found = findCityByID(order, orderSearchCondition.getCityID());
+                if (found && orderSearchCondition.searchByCity())
+                    found = findCityByID(order, orderSearchCondition.getCityID());
 
-            if (found && orderSearchCondition.searchByCountry())
-                found = findCountryByID(order, orderSearchCondition.getCountryID());
+                if (found && orderSearchCondition.searchByCountry())
+                    found = findCountryByID(order, orderSearchCondition.getCountryID());
 
-            if (found)
-                result.add(order);
+                if (found)
+                    result.add(order);
+            }
+
+            return result;
         }
-
-        return result;
     }
 
     private boolean findCityByID(Order order, Long cityId) {

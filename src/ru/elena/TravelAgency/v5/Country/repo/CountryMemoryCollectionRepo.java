@@ -90,7 +90,9 @@ public class CountryMemoryCollectionRepo implements CountryCollectionRepo {
     }
 
     private List<? extends BaseCountry> searchProcess(CountrySearchCondition countrySearchCondition) {
-        if (countrySearchCondition.searchByCountryName())
+        if (countrySearchCondition.searchById())
+            return Collections.singletonList(findByIndex(countrySearchCondition.getId()));
+        else if (countrySearchCondition.searchByCountryName())
             return Collections.singletonList(find(countrySearchCondition.getName()));
         else if (countrySearchCondition.searchByCountryDiscriminator()) {
             CountryDiscriminator discriminator = countrySearchCondition.getDiscriminator();
