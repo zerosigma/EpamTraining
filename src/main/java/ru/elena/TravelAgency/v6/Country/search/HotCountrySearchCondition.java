@@ -1,7 +1,5 @@
 package main.java.ru.elena.TravelAgency.v6.Country.search;
 
-import main.java.ru.elena.TravelAgency.v5.Country.search.CountrySearchCondition;
-
 import java.time.Month;
 
 public class HotCountrySearchCondition extends CountrySearchCondition {

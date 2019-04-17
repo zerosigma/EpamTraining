@@ -1,17 +1,16 @@
-package main.java.ru.elena.TravelAgency.v6.Order.repo;
+package main.java.ru.elena.TravelAgency.v6.Order.repo.implementation.memory;
 
-import main.java.ru.elena.TravelAgency.v5.City.domain.City;
-import main.java.ru.elena.TravelAgency.v5.Order.domain.Order;
-import main.java.ru.elena.TravelAgency.v5.Order.repo.OrderCollectionRepo;
-import main.java.ru.elena.TravelAgency.v5.Order.search.OrderSearchCondition;
-import main.java.ru.elena.TravelAgency.v5.Storage.Storage;
+import com.sun.org.apache.xpath.internal.operations.Or;
+import main.java.ru.elena.TravelAgency.v6.City.domain.City;
+import main.java.ru.elena.TravelAgency.v6.Order.domain.Order;
+import main.java.ru.elena.TravelAgency.v6.Order.repo.OrderCollectionRepo;
+import main.java.ru.elena.TravelAgency.v6.Order.search.OrderSearchCondition;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-import static main.java.ru.elena.TravelAgency.v5.Storage.GlobalIDGenerator.generateNextValue;
+import static main.java.ru.elena.TravelAgency.v6.Storage.GlobalIDGenerator.generateNextValue;
+import static main.java.ru.elena.TravelAgency.v6.Storage.Storage.countriesList;
+import static main.java.ru.elena.TravelAgency.v6.Storage.Storage.ordersList;
 
 public class OrderMemoryCollectionRepo implements OrderCollectionRepo {
     @Override
@@ -22,12 +21,14 @@ public class OrderMemoryCollectionRepo implements OrderCollectionRepo {
     }
 
     private List<Order> searchProcess(OrderSearchCondition orderSearchCondition) {
-        if (orderSearchCondition.searchById())
-            return Collections.singletonList(findByIndex(orderSearchCondition.getId()));
+        if (orderSearchCondition.searchById()) {
+            Optional<Order> foundOrder = findByIndex(orderSearchCondition.getId());
+            return foundOrder.map(Collections::singletonList).orElse(Collections.emptyList());
+        }
         else {
             List<Order> result = new ArrayList<>();
 
-            for (Order order : Storage.ordersList) {
+            for (Order order : ordersList) {
                 boolean found = true;
 
                 if (orderSearchCondition.searchByUser())
@@ -51,25 +52,17 @@ public class OrderMemoryCollectionRepo implements OrderCollectionRepo {
     }
 
     private boolean findCityByID(Order order, Long cityId) {
-        for (City city : order.getCitiesInOrder())
-            if (cityId.equals(city.getId()))
-                return true;
-
-        return false;
+        return order.getCitiesInOrder().stream().anyMatch(city -> cityId.equals(city.getId()));
     }
 
     private boolean findCountryByID(Order order, Long countryId) {
-        for (City city : order.getCitiesInOrder())
-            if (countryId.equals(city.getIdCountry()))
-                return true;
-
-        return false;
+        return order.getCitiesInOrder().stream().anyMatch(city -> countryId.equals(city.getIdCountry()));
     }
 
     @Override
     public Order insert(Order order) {
         order.setId(generateNextValue());
-        Storage.ordersList.add(order);
+        ordersList.add(order);
 
         return order;
     }
@@ -80,54 +73,30 @@ public class OrderMemoryCollectionRepo implements OrderCollectionRepo {
     }
 
     @Override
-    public void delete(Order order) {
-        Order orderElem = findByEntity(order);
-
-        if (orderElem != null)
-            Storage.ordersList.remove(order);
-
-    }
-
-    @Override
     public void update(Order entity) {
 
     }
 
     @Override
-    public Order findByID(Long id) {
+    public Optional<Order> findByID(Long id) {
         return findByIndex(id);
     }
 
     @Override
     public void deleteByID(Long id) {
-        Order order = findByID(id);
-
-        if (order != null)
-            Storage.ordersList.remove(order);
-
+        Optional<Order> foundOrder = findByID(id);
+        foundOrder.map(order -> ordersList.remove(order));
     }
 
-    private Order findByIndex(long id) {
-        for (Order order : Storage.ordersList)
-            if (Long.valueOf(id).equals(order.getId()))
-                return order;
-
-        return null;
-    }
-
-    private Order findByEntity(Order cityToFind) {
-        for (Order order : Storage.ordersList)
-            if (order.equals(cityToFind))
-                return order;
-
-        return null;
+    private Optional<Order> findByIndex(long id) {
+        return ordersList.stream().filter(order -> Long.valueOf(id).equals(order.getId())).findAny();
     }
 
     @Override
     public int countOrdersWithCity(long cityId) {
         int count = 0;
 
-        for (Order order : Storage.ordersList)
+        for (Order order : ordersList)
             for (City city : order.getCitiesInOrder())
                 if (city.getId() == cityId) {
                     count++;
@@ -141,7 +110,7 @@ public class OrderMemoryCollectionRepo implements OrderCollectionRepo {
     public int countOrdersWithCountry(long countryId) {
         int count = 0;
 
-        for (Order order : Storage.ordersList)
+        for (Order order : ordersList)
             for (City city : order.getCitiesInOrder())
                 if (city.getIdCountry() == countryId) {
                     count++;

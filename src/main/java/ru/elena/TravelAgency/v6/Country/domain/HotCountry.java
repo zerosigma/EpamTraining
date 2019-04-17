@@ -1,8 +1,5 @@
 package main.java.ru.elena.TravelAgency.v6.Country.domain;
 
-import main.java.ru.elena.TravelAgency.v5.Country.domain.BaseCountry;
-import main.java.ru.elena.TravelAgency.v5.Country.domain.CountryDiscriminator;
-
 import java.time.Month;
 
 public class HotCountry extends BaseCountry {

@@ -1,12 +1,16 @@
 package main.java.ru.elena.TravelAgency.v6.City.repo.implementation.memory;
 
-import main.java.ru.elena.TravelAgency.v5.City.domain.City;
-import main.java.ru.elena.TravelAgency.v5.City.repo.CityArrayRepo;
-import main.java.ru.elena.TravelAgency.v5.City.search.CitySearchCondition;
-import main.java.ru.elena.TravelAgency.v5.Storage.Storage;
-import main.java.ru.elena.TravelAgency.v5.common.solution.utils.ArrayUtils;
+import main.java.ru.elena.TravelAgency.v6.City.domain.City;
+import main.java.ru.elena.TravelAgency.v6.City.repo.CityArrayRepo;
+import main.java.ru.elena.TravelAgency.v6.City.search.CitySearchCondition;
+import main.java.ru.elena.TravelAgency.v6.common.solution.utils.ArrayUtils;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
+
+import static main.java.ru.elena.TravelAgency.v6.Storage.GlobalIDGenerator.generateNextValue;
+import static main.java.ru.elena.TravelAgency.v6.Storage.Storage.cities;
 
 public class CityMemoryArrayRepo implements CityArrayRepo {
     private static final City[] EMPTY_CITY_ARRAY = new City[0];
@@ -14,14 +18,15 @@ public class CityMemoryArrayRepo implements CityArrayRepo {
 
     @Override
     public City insert(City city) {
-        if (cityIndexInStorage == Storage.cities.length - 1) {
-            City[] newCities = new City[Storage.cities.length * 2];
-            System.arraycopy(Storage.cities, 0, newCities, 0, Storage.cities.length);
-            Storage.cities = newCities;
+        if (cityIndexInStorage == cities.length - 1) {
+            City[] newCities = new City[cities.length * 2];
+            System.arraycopy(cities, 0, newCities, 0, cities.length);
+            cities = newCities;
         }
 
         cityIndexInStorage++;
-        Storage.cities[cityIndexInStorage] = city;
+        city.setId(generateNextValue());
+        cities[cityIndexInStorage] = city;
 
         return city;
     }
@@ -36,17 +41,7 @@ public class CityMemoryArrayRepo implements CityArrayRepo {
         Integer cityIndex = findIndex(id);
 
         if (cityIndex != null) {
-            ArrayUtils.deleteElement(Storage.cities, cityIndex);
-            cityIndexInStorage--;
-        }
-    }
-
-    @Override
-    public void delete(City city) {
-        Integer cityIndex = findIndex(city);
-
-        if (cityIndex != null) {
-            ArrayUtils.deleteElement(Storage.cities, cityIndex);
+            ArrayUtils.deleteElement(cities, cityIndex);
             cityIndexInStorage--;
         }
     }
@@ -57,48 +52,34 @@ public class CityMemoryArrayRepo implements CityArrayRepo {
     }
 
     @Override
-    public City findByID(Long id) {
-        for (City city : Storage.cities)
-            if (city.getId().equals(id))
-                return city;
-
-        return null;
+    public Optional<City> findByID(Long id) {
+        return Arrays.stream(cities).filter(city -> city.getId().equals(id)).findAny();
     }
 
     @Override
-    public City find(String name) {
-        for (City city : Storage.cities)
-            if (city.getName().equals(name))
-                return city;
-
-        return null;
+    public Optional<City> find(String name) {
+        return Arrays.stream(cities).filter(city -> city.getName().equals(name)).findAny();
     }
 
     private Integer findIndex(long id) {
-        for (int i = 0; i < Storage.cities.length; i++)
-            if (Storage.cities[i].getId().equals(id))
+        for (int i = 0; i < cities.length; i++)
+            if (cities[i].getId().equals(id))
                 return i;
 
          return null;
     }
 
-    private Integer findIndex(City city) {
-        for (int i = 0; i < Storage.cities.length; i++)
-            if (Storage.cities[i].equals(city))
-                return i;
-
-        return null;
-    }
-
     @Override
     public City[] search(CitySearchCondition citySearchCondition) {
-        if (citySearchCondition.searchById())
-            return new City[]{findByID(citySearchCondition.getId())};
+        if (citySearchCondition.searchById()) {
+            Optional<City> foundCity = findByID(citySearchCondition.getId());
+            return foundCity.map(city -> new City[]{city}).orElse(EMPTY_CITY_ARRAY);
+        }
         else {
-            City[] result = new City[Storage.cities.length];
+            City[] result = new City[cities.length];
             int resultIndex = 0;
 
-            for (City city : Storage.cities)
+            for (City city : cities)
                 if (city != null) {
                     boolean found = true;
 

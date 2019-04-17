@@ -1,7 +1,7 @@
 package main.java.ru.elena.TravelAgency.v6.Country.search;
 
-import main.java.ru.elena.TravelAgency.v5.Country.domain.CountryDiscriminator;
-import main.java.ru.elena.TravelAgency.v5.common.business.search.BaseSearchCondition;
+import main.java.ru.elena.TravelAgency.v6.Country.domain.CountryDiscriminator;
+import main.java.ru.elena.TravelAgency.v6.common.business.search.BaseSearchCondition;
 
 import static main.java.ru.elena.TravelAgency.v4.common.utils.StringUtils.isNotEmptyString;
 

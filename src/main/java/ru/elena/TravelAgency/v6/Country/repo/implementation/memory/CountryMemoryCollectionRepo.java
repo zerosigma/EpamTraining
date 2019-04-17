@@ -1,21 +1,18 @@
 package main.java.ru.elena.TravelAgency.v6.Country.repo.implementation.memory;
 
-import main.java.ru.elena.TravelAgency.v5.Country.domain.BaseCountry;
-import main.java.ru.elena.TravelAgency.v5.Country.domain.ColdCountry;
-import main.java.ru.elena.TravelAgency.v5.Country.domain.CountryDiscriminator;
-import main.java.ru.elena.TravelAgency.v5.Country.domain.HotCountry;
-import main.java.ru.elena.TravelAgency.v5.Country.repo.CountryCollectionRepo;
-import main.java.ru.elena.TravelAgency.v5.Country.search.ColdCountrySearchCondition;
-import main.java.ru.elena.TravelAgency.v5.Country.search.CountrySearchCondition;
-import main.java.ru.elena.TravelAgency.v5.Country.search.HotCountrySearchCondition;
+import main.java.ru.elena.TravelAgency.v6.Country.domain.BaseCountry;
+import main.java.ru.elena.TravelAgency.v6.Country.domain.ColdCountry;
+import main.java.ru.elena.TravelAgency.v6.Country.domain.CountryDiscriminator;
+import main.java.ru.elena.TravelAgency.v6.Country.domain.HotCountry;
+import main.java.ru.elena.TravelAgency.v6.Country.repo.CountryCollectionRepo;
+import main.java.ru.elena.TravelAgency.v6.Country.search.ColdCountrySearchCondition;
+import main.java.ru.elena.TravelAgency.v6.Country.search.CountrySearchCondition;
+import main.java.ru.elena.TravelAgency.v6.Country.search.HotCountrySearchCondition;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-import static main.java.ru.elena.TravelAgency.v5.Storage.GlobalIDGenerator.generateNextValue;
-import static main.java.ru.elena.TravelAgency.v5.Storage.Storage.countriesList;
+import static main.java.ru.elena.TravelAgency.v6.Storage.GlobalIDGenerator.generateNextValue;
+import static main.java.ru.elena.TravelAgency.v6.Storage.Storage.countriesList;
 
 public class CountryMemoryCollectionRepo implements CountryCollectionRepo {
     @Override
@@ -27,39 +24,24 @@ public class CountryMemoryCollectionRepo implements CountryCollectionRepo {
     }
 
     @Override
-    public void delete(BaseCountry country) {
-        BaseCountry countryElem = findByEntity(country);
-
-        if (countryElem != null)
-            countriesList.remove(country);
-    }
-
-    @Override
     public void update(BaseCountry entity) {
 
     }
 
     @Override
-    public BaseCountry findByID(Long id) {
+    public Optional<BaseCountry> findByID(Long id) {
         return findByIndex(id);
     }
 
     @Override
-    public BaseCountry find(String name) {
-        for (BaseCountry country : countriesList)
-            if (country.getName().equals(name))
-                return country;
-
-        return null;
+    public Optional<BaseCountry> find(String name) {
+        return countriesList.stream().filter(country -> country.getName().equals(name)).findAny();
     }
 
     @Override
     public void deleteByID(Long id) {
-        BaseCountry country = findByID(id);
-
-        if (country != null) {
-            countriesList.remove(country);
-        }
+        Optional<BaseCountry> foundCountry = findByID(id);
+        foundCountry.map(country -> countriesList.remove(country));
     }
 
     @Override
@@ -67,20 +49,8 @@ public class CountryMemoryCollectionRepo implements CountryCollectionRepo {
         countries.forEach(this::insert);
     }
 
-    private BaseCountry findByIndex(long id) {
-        for (BaseCountry country : countriesList)
-            if (Long.valueOf(id).equals(country.getId()))
-                return country;
-
-        return null;
-    }
-
-    private BaseCountry findByEntity(BaseCountry countryToFind) {
-        for (BaseCountry country : countriesList)
-            if (country.equals(countryToFind))
-                return country;
-
-        return null;
+    private Optional<BaseCountry> findByIndex(long id) {
+        return countriesList.stream().filter(country -> Long.valueOf(id).equals(country.getId())).findAny();
     }
 
     @Override
@@ -91,10 +61,14 @@ public class CountryMemoryCollectionRepo implements CountryCollectionRepo {
     }
 
     private List<? extends BaseCountry> searchProcess(CountrySearchCondition countrySearchCondition) {
-        if (countrySearchCondition.searchById())
-            return Collections.singletonList(findByIndex(countrySearchCondition.getId()));
-        else if (countrySearchCondition.searchByCountryName())
-            return Collections.singletonList(find(countrySearchCondition.getName()));
+        if (countrySearchCondition.searchById()) {
+            Optional<BaseCountry> foundCountry = findByIndex(countrySearchCondition.getId());
+            return foundCountry.map(Collections::singletonList).orElse(Collections.emptyList());
+        }
+        else if (countrySearchCondition.searchByCountryName()) {
+            Optional<BaseCountry> foundCountry = find(countrySearchCondition.getName());
+            return foundCountry.map(Collections::singletonList).orElse(Collections.emptyList());
+        }
         else if (countrySearchCondition.searchByCountryDiscriminator()) {
             CountryDiscriminator discriminator = countrySearchCondition.getDiscriminator();
             List<? extends BaseCountry> result = new ArrayList<>();

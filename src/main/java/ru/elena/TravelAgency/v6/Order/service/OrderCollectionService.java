@@ -1,8 +1,7 @@
 package main.java.ru.elena.TravelAgency.v6.Order.service;
 
-import main.java.ru.elena.TravelAgency.v5.Order.domain.Order;
-import main.java.ru.elena.TravelAgency.v5.Order.search.OrderSearchCondition;
-import main.java.ru.elena.TravelAgency.v5.Order.service.OrderService;
+import main.java.ru.elena.TravelAgency.v6.Order.domain.Order;
+import main.java.ru.elena.TravelAgency.v6.Order.search.OrderSearchCondition;
 
 import java.util.List;
 

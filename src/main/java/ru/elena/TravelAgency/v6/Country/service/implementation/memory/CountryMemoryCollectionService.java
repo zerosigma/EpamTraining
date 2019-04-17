@@ -1,18 +1,19 @@
 package main.java.ru.elena.TravelAgency.v6.Country.service.implementation.memory;
 
-import main.java.ru.elena.TravelAgency.v5.City.service.CityCollectionService;
-import main.java.ru.elena.TravelAgency.v5.City.domain.City;
-import main.java.ru.elena.TravelAgency.v5.Country.domain.BaseCountry;
-import main.java.ru.elena.TravelAgency.v5.Country.exception.CountryExceptionMeta;
-import main.java.ru.elena.TravelAgency.v5.Country.exception.checked.CountryDeletionException;
-import main.java.ru.elena.TravelAgency.v5.Country.repo.CountryCollectionRepo;
-import main.java.ru.elena.TravelAgency.v5.Country.search.CountrySearchCondition;
-import main.java.ru.elena.TravelAgency.v5.Country.service.CountryCollectionService;
-import main.java.ru.elena.TravelAgency.v5.Order.repo.OrderCollectionRepo;
-import main.java.ru.elena.TravelAgency.v5.common.business.exception.BaseTravelAgencyCheckedException;
+import main.java.ru.elena.TravelAgency.v6.City.service.CityCollectionService;
+import main.java.ru.elena.TravelAgency.v6.City.domain.City;
+import main.java.ru.elena.TravelAgency.v6.Country.domain.BaseCountry;
+import main.java.ru.elena.TravelAgency.v6.Country.exception.CountryExceptionMeta;
+import main.java.ru.elena.TravelAgency.v6.Country.exception.checked.CountryDeletionException;
+import main.java.ru.elena.TravelAgency.v6.Country.repo.CountryCollectionRepo;
+import main.java.ru.elena.TravelAgency.v6.Country.search.CountrySearchCondition;
+import main.java.ru.elena.TravelAgency.v6.Country.service.CountryCollectionService;
+import main.java.ru.elena.TravelAgency.v6.Order.repo.OrderCollectionRepo;
+import main.java.ru.elena.TravelAgency.v6.common.business.exception.BaseTravelAgencyCheckedException;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public class CountryMemoryCollectionService implements CountryCollectionService {
     private final CountryCollectionRepo countryRepo;
@@ -25,15 +26,16 @@ public class CountryMemoryCollectionService implements CountryCollectionService 
         this.orderRepo = orderRepo;
     }
 
+    @Override
     public BaseCountry insert(BaseCountry country) {
         if (country != null) {
             countryRepo.insert(country);
 
-            if (country.getCities() != null)
-                for (City city : country.getCities()) {
+            if (country.getCities() != null && !country.getCities().isEmpty())
+                country.getCities().stream().forEach(city -> {
                     city.setIdCountry(country.getId());
                     cityService.insert(city);
-                }
+                });
         }
 
         return country;
@@ -41,10 +43,11 @@ public class CountryMemoryCollectionService implements CountryCollectionService 
 
     @Override
     public void insert(Collection<BaseCountry> countries) {
-        if (!countries.isEmpty())
+        if (countries != null && !countries.isEmpty())
             countryRepo.insert(countries);
     }
 
+    @Override
     public void deleteByID(Long id) throws BaseTravelAgencyCheckedException {
         if (id != null) {
             boolean noOrdersWithCountry = orderRepo.countOrdersWithCountry(id) == 0;
@@ -58,17 +61,24 @@ public class CountryMemoryCollectionService implements CountryCollectionService 
         }
     }
 
+    @Override
     public void delete(BaseCountry country) throws BaseTravelAgencyCheckedException {
         if (country != null && country.getId() != null) {
             deleteByID(country.getId());
         }
     }
 
-    private void deleteAllCitiesFromCountry(Long id) throws BaseTravelAgencyCheckedException {
-        BaseCountry country = findByID(id);
-        if (country != null && country.getCities() != null)
-            for (City city : country.getCities())
-                cityService.delete(city);
+    private void deleteAllCitiesFromCountry(Long id) {
+        findByID(id).ifPresent(country -> {
+            if (country.getCities() != null && !country.getCities().isEmpty())
+                country.getCities().forEach(city -> {
+                    try {
+                        cityService.deleteByID(city.getId());
+                    } catch (BaseTravelAgencyCheckedException e) {
+                        e.printStackTrace();
+                    }
+                });
+        });
     }
 
     @Override
@@ -77,18 +87,20 @@ public class CountryMemoryCollectionService implements CountryCollectionService 
             countryRepo.update(country);
     }
 
-    public BaseCountry findByID(Long id) {
+    @Override
+    public Optional<BaseCountry> findByID(Long id) {
         if (id != null)
             countryRepo.findByID(id);
 
-        return null;
+        return Optional.empty();
     }
 
-    public BaseCountry find(String name) {
+    @Override
+    public Optional<BaseCountry> find(String name) {
         if (name != null)
             countryRepo.find(name);
 
-        return null;
+        return Optional.empty();
     }
 
     @Override

@@ -1,9 +1,8 @@
 package main.java.ru.elena.TravelAgency.v6.Order.domain;
 
-import main.java.ru.elena.TravelAgency.v5.City.domain.City;
-import main.java.ru.elena.TravelAgency.v5.Order.domain.Currency;
-import main.java.ru.elena.TravelAgency.v5.User.domain.User;
-import main.java.ru.elena.TravelAgency.v5.common.business.domain.BaseDomain;
+import main.java.ru.elena.TravelAgency.v6.City.domain.City;
+import main.java.ru.elena.TravelAgency.v6.User.domain.User;
+import main.java.ru.elena.TravelAgency.v6.common.business.domain.BaseDomain;
 
 import java.util.List;
 

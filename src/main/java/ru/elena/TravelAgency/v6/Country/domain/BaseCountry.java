@@ -1,8 +1,7 @@
 package main.java.ru.elena.TravelAgency.v6.Country.domain;
 
-import main.java.ru.elena.TravelAgency.v5.City.domain.City;
-import main.java.ru.elena.TravelAgency.v5.Country.domain.CountryDiscriminator;
-import main.java.ru.elena.TravelAgency.v5.common.business.domain.BaseDomain;
+import main.java.ru.elena.TravelAgency.v6.City.domain.City;
+import main.java.ru.elena.TravelAgency.v6.common.business.domain.BaseDomain;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ public abstract class BaseCountry extends BaseDomain<Long> {
     protected String language;
     protected String dialingCode;
 
-    protected main.java.ru.elena.TravelAgency.v5.Country.domain.CountryDiscriminator discriminator;
+    protected CountryDiscriminator discriminator;
 
     private List<City> cities;
 

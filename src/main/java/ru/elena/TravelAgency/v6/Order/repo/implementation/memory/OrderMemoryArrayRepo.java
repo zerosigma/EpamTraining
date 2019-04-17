@@ -1,27 +1,30 @@
-package main.java.ru.elena.TravelAgency.v6.Order.repo;
+package main.java.ru.elena.TravelAgency.v6.Order.repo.implementation.memory;
 
-import main.java.ru.elena.TravelAgency.v5.City.domain.City;
-import main.java.ru.elena.TravelAgency.v5.Order.domain.Order;
-import main.java.ru.elena.TravelAgency.v5.Order.repo.OrderArrayRepo;
-import main.java.ru.elena.TravelAgency.v5.Order.search.OrderSearchCondition;
-import main.java.ru.elena.TravelAgency.v5.Storage.Storage;
-import main.java.ru.elena.TravelAgency.v5.common.solution.utils.ArrayUtils;
+import main.java.ru.elena.TravelAgency.v6.City.domain.City;
+import main.java.ru.elena.TravelAgency.v6.Order.domain.Order;
+import main.java.ru.elena.TravelAgency.v6.Order.repo.OrderArrayRepo;
+import main.java.ru.elena.TravelAgency.v6.Order.search.OrderSearchCondition;
+import main.java.ru.elena.TravelAgency.v6.common.solution.utils.ArrayUtils;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
+
+import static main.java.ru.elena.TravelAgency.v6.Storage.Storage.orders;
 
 public class OrderMemoryArrayRepo implements OrderArrayRepo {
     private static final Order[] EMPTY_ORDER_ARRAY = new Order[0];
     private int orderIndexInStorage = -1;
 
     public Order insert(Order order) {
-        if (orderIndexInStorage == Storage.orders.length - 1) {
-            Order[] newOrders = new Order[Storage.orders.length * 2];
-            System.arraycopy(Storage.orders, 0, newOrders, 0, Storage.orders.length);
-            Storage.orders = newOrders;
+        if (orderIndexInStorage == orders.length - 1) {
+            Order[] newOrders = new Order[orders.length * 2];
+            System.arraycopy(orders, 0, newOrders, 0, orders.length);
+            orders = newOrders;
         }
 
         orderIndexInStorage++;
-        Storage.orders[orderIndexInStorage] = order;
+        orders[orderIndexInStorage] = order;
 
         return order;
     }
@@ -30,7 +33,7 @@ public class OrderMemoryArrayRepo implements OrderArrayRepo {
         Integer orderIndex = findIndex(id);
 
         if (orderIndex != null) {
-            ArrayUtils.deleteElement(Storage.orders, orderIndex);
+            ArrayUtils.deleteElement(orders, orderIndex);
             orderIndexInStorage--;
         }
     }
@@ -40,39 +43,19 @@ public class OrderMemoryArrayRepo implements OrderArrayRepo {
         orders.forEach(this::insert);
     }
 
-    public void delete(Order order) {
-        Integer orderIndex = findIndex(order);
-
-        if (orderIndex != null) {
-            ArrayUtils.deleteElement(Storage.orders, orderIndex);
-            orderIndexInStorage--;
-        }
-    }
-
     @Override
     public void update(Order entity) {
 
     }
 
-    public Order findByID(Long id) {
-        for (Order order : Storage.orders)
-            if (order.getId().equals(id))
-                return order;
-
-        return null;
+    @Override
+    public Optional<Order> findByID(Long id) {
+        return Arrays.stream(orders).filter(order -> order.getId().equals(id)).findAny();
     }
 
     private Integer findIndex(long id) {
-        for (int i = 0; i < Storage.orders.length; i++)
-            if (Storage.orders[i].getId().equals(id))
-                return i;
-
-        return null;
-    }
-
-    private Integer findIndex(Order order) {
-        for (int i = 0; i < Storage.orders.length; i++)
-            if (Storage.orders[i].equals(order))
+        for (int i = 0; i < orders.length; i++)
+            if (orders[i].getId().equals(id))
                 return i;
 
         return null;
@@ -80,13 +63,15 @@ public class OrderMemoryArrayRepo implements OrderArrayRepo {
 
     @Override
     public Order[] search(OrderSearchCondition orderSearchCondition) {
-        if (orderSearchCondition.searchById())
-            return new Order[]{findByID(orderSearchCondition.getId())};
+        if (orderSearchCondition.searchById()) {
+            Optional<Order> foundOrder = findByID(orderSearchCondition.getId());
+            return foundOrder.map(order -> new Order[]{order}).orElse(EMPTY_ORDER_ARRAY);
+        }
         else {
-            Order[] result = new Order[Storage.orders.length];
+            Order[] result = new Order[orders.length];
             int resultIndex = 0;
 
-            for (Order order : Storage.orders)
+            for (Order order : orders)
                 if (order != null) {
                     boolean found = true;
 
@@ -113,7 +98,7 @@ public class OrderMemoryArrayRepo implements OrderArrayRepo {
     public int countOrdersWithCity(long cityId) {
         int count = 0;
 
-        for (Order order : Storage.orders)
+        for (Order order : orders)
             if (order != null)
                 for (City city : order.getCitiesInOrder())
                     if (city.getId() == cityId) {
@@ -128,7 +113,7 @@ public class OrderMemoryArrayRepo implements OrderArrayRepo {
     public int countOrdersWithCountry(long countryId) {
         int count = 0;
 
-        for (Order order : Storage.orders)
+        for (Order order : orders)
             if (order != null)
                 for (City city : order.getCitiesInOrder())
                     if (city.getIdCountry() == countryId) {

@@ -1,18 +1,22 @@
 package main.java.ru.elena.TravelAgency.v6.Country.repo.implementation.memory;
 
-import main.java.ru.elena.TravelAgency.v5.Country.domain.BaseCountry;
-import main.java.ru.elena.TravelAgency.v5.Country.repo.CountryArrayRepo;
-import main.java.ru.elena.TravelAgency.v5.Country.search.CountrySearchCondition;
+import main.java.ru.elena.TravelAgency.v6.Country.domain.BaseCountry;
+import main.java.ru.elena.TravelAgency.v6.Country.repo.CountryArrayRepo;
+import main.java.ru.elena.TravelAgency.v6.Country.search.CountrySearchCondition;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
-import static main.java.ru.elena.TravelAgency.v5.Storage.Storage.countries;
-import static main.java.ru.elena.TravelAgency.v5.common.solution.utils.ArrayUtils.deleteElement;
+import static main.java.ru.elena.TravelAgency.v6.Storage.GlobalIDGenerator.generateNextValue;
+import static main.java.ru.elena.TravelAgency.v6.Storage.Storage.countries;
+import static main.java.ru.elena.TravelAgency.v6.common.solution.utils.ArrayUtils.deleteElement;
 
 public class CountryMemoryArrayRepo implements CountryArrayRepo {
     private static final BaseCountry[] EMPTY_COUNTRY_ARRAY = new BaseCountry[0];
     private int countryIndexInStorage = -1;
 
+    @Override
     public BaseCountry insert(BaseCountry country) {
         if (countryIndexInStorage == countries.length - 1) {
             BaseCountry[] newCountries = new BaseCountry[countries.length * 2];
@@ -21,6 +25,7 @@ public class CountryMemoryArrayRepo implements CountryArrayRepo {
         }
 
         countryIndexInStorage++;
+        country.setId(generateNextValue());
         countries[countryIndexInStorage] = country;
 
         return country;
@@ -31,17 +36,9 @@ public class CountryMemoryArrayRepo implements CountryArrayRepo {
         countries.forEach(this::insert);
     }
 
+    @Override
     public void deleteByID(Long id) {
         Integer countryIndex = findIndex(id);
-
-        if (countryIndex != null) {
-            deleteElement(countries, countryIndex);
-            countryIndexInStorage--;
-        }
-    }
-
-    public void delete(BaseCountry country) {
-        Integer countryIndex = findIndex(country);
 
         if (countryIndex != null) {
             deleteElement(countries, countryIndex);
@@ -54,20 +51,14 @@ public class CountryMemoryArrayRepo implements CountryArrayRepo {
 
     }
 
-    public BaseCountry findByID(Long id) {
-        for (BaseCountry country : countries)
-            if (country.getId().equals(id))
-                return country;
-
-        return null;
+    @Override
+    public Optional<BaseCountry> findByID(Long id) {
+        return Arrays.stream(countries).filter(country -> country.getId().equals(id)).findAny();
     }
 
-    public BaseCountry find(String name) {
-        for (BaseCountry country : countries)
-            if (country.getName().equals(name))
-                return country;
-
-        return null;
+    @Override
+    public Optional<BaseCountry> find(String name) {
+        return Arrays.stream(countries).filter(country -> country.getName().equals(name)).findAny();
     }
 
     private Integer findIndex(long id) {
@@ -78,18 +69,12 @@ public class CountryMemoryArrayRepo implements CountryArrayRepo {
         return null;
     }
 
-    private Integer findIndex(BaseCountry country) {
-        for (int i = 0; i < countries.length; i++)
-            if (countries[i].equals(country))
-                return i;
-
-        return null;
-    }
-
     @Override
     public BaseCountry[] search(CountrySearchCondition countrySearchCondition) {
-        if (countrySearchCondition.searchById())
-            return new BaseCountry[]{findByID(countrySearchCondition.getId())};
+        if (countrySearchCondition.searchById()) {
+            Optional<BaseCountry> foundCountry = findByID(countrySearchCondition.getId());
+            return foundCountry.map(country -> new BaseCountry[]{country}).orElse(EMPTY_COUNTRY_ARRAY);
+        }
         else {
             BaseCountry[] result = new BaseCountry[countries.length];
             int resultIndex = 0;

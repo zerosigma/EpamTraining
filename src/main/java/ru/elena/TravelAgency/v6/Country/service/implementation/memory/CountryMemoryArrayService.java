@@ -1,32 +1,40 @@
 package main.java.ru.elena.TravelAgency.v6.Country.service.implementation.memory;
 
-import main.java.ru.elena.TravelAgency.v5.City.domain.City;
-import main.java.ru.elena.TravelAgency.v5.City.repo.CityArrayRepo;
-import main.java.ru.elena.TravelAgency.v5.Country.domain.BaseCountry;
-import main.java.ru.elena.TravelAgency.v5.Country.repo.CountryArrayRepo;
-import main.java.ru.elena.TravelAgency.v5.Country.search.CountrySearchCondition;
-import main.java.ru.elena.TravelAgency.v5.Country.service.CountryArrayService;
+import main.java.ru.elena.TravelAgency.v6.Country.exception.CountryExceptionMeta;
+import main.java.ru.elena.TravelAgency.v6.City.service.CityArrayService;
+import main.java.ru.elena.TravelAgency.v6.Country.domain.BaseCountry;
+import main.java.ru.elena.TravelAgency.v6.Country.exception.checked.CountryDeletionException;
+import main.java.ru.elena.TravelAgency.v6.Country.repo.CountryArrayRepo;
+import main.java.ru.elena.TravelAgency.v6.Country.search.CountrySearchCondition;
+import main.java.ru.elena.TravelAgency.v6.Country.service.CountryArrayService;
+import main.java.ru.elena.TravelAgency.v6.Order.repo.OrderArrayRepo;
+import main.java.ru.elena.TravelAgency.v6.common.business.exception.BaseTravelAgencyCheckedException;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public class CountryMemoryArrayService implements CountryArrayService {
     private final CountryArrayRepo countryRepo;
-    private final CityArrayRepo cityRepo;
+    private final CityArrayService cityService;
+    private final OrderArrayRepo orderRepo;
 
-    public CountryMemoryArrayService(CountryArrayRepo countryRepo, CityArrayRepo cityRepo) {
+
+    public CountryMemoryArrayService(CountryArrayRepo countryRepo, CityArrayService cityService, OrderArrayRepo orderRepo) {
         this.countryRepo = countryRepo;
-        this.cityRepo = cityRepo;
+        this.cityService = cityService;
+        this.orderRepo = orderRepo;
     }
 
+    @Override
     public BaseCountry insert(BaseCountry country) {
         if (country != null) {
             countryRepo.insert(country);
 
-            if (country.getCities() != null)
-                for (City city : country.getCities()) {
+            if (country.getCities() != null && !country.getCities().isEmpty())
+                country.getCities().forEach(city -> {
                     city.setIdCountry(country.getId());
-                    cityRepo.insert(city);
-                }
+                    cityService.insert(city);
+                });
         }
 
         return country;
@@ -38,14 +46,37 @@ public class CountryMemoryArrayService implements CountryArrayService {
             countryRepo.insert(countries);
     }
 
-    public void deleteByID(Long id) {
-        if (id != null)
-            countryRepo.deleteByID(id);
+    @Override
+    public void deleteByID(Long id) throws BaseTravelAgencyCheckedException {
+        if (id != null) {
+            boolean noOrdersWithCountry = orderRepo.countOrdersWithCountry(id) == 0;
+
+            if (noOrdersWithCountry) {
+                deleteAllCitiesFromCountry(id);
+                countryRepo.deleteByID(id);
+            }
+            else
+                throw new CountryDeletionException(CountryExceptionMeta.COUNTRY_DELETION_CONSTRAINT_ERROR);
+        }
     }
 
-    public void delete(BaseCountry country) {
-        if (country != null)
-            countryRepo.delete(country);
+    @Override
+    public void delete(BaseCountry country) throws BaseTravelAgencyCheckedException {
+        if (country != null && country.getId() != null)
+            deleteByID(country.getId());
+    }
+
+    private void deleteAllCitiesFromCountry(Long id) {
+        findByID(id).ifPresent(country -> {
+            if (country.getCities() != null && !country.getCities().isEmpty())
+                country.getCities().forEach(city -> {
+                    try {
+                        cityService.deleteByID(city.getId());
+                    } catch (BaseTravelAgencyCheckedException e) {
+                        e.printStackTrace();
+                    }
+                });
+        });
     }
 
     @Override
@@ -54,18 +85,20 @@ public class CountryMemoryArrayService implements CountryArrayService {
             countryRepo.update(country);
     }
 
-    public BaseCountry findByID(Long id) {
+    @Override
+    public Optional<BaseCountry> findByID(Long id) {
         if (id != null)
             countryRepo.findByID(id);
 
-        return null;
+        return Optional.empty();
     }
 
-    public BaseCountry find(String name) {
+    @Override
+    public Optional<BaseCountry> find(String name) {
         if (name != null)
             countryRepo.find(name);
 
-        return null;
+        return Optional.empty();
     }
 
     @Override

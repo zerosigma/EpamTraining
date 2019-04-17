@@ -1,28 +1,31 @@
 package main.java.ru.elena.TravelAgency.v6.common.business.application.servicefactory;
 
-import main.java.ru.elena.TravelAgency.v5.City.repo.implementation.memory.CityMemoryCollectionRepo;
-import main.java.ru.elena.TravelAgency.v5.City.service.implementation.memory.CityMemoryCollectionService;
-import main.java.ru.elena.TravelAgency.v5.City.service.CityService;
-import main.java.ru.elena.TravelAgency.v5.Country.repo.CountryMemoryCollectionRepo;
-import main.java.ru.elena.TravelAgency.v5.Country.service.CountryMemoryCollectionService;
-import main.java.ru.elena.TravelAgency.v5.Country.service.CountryService;
-import main.java.ru.elena.TravelAgency.v5.Order.repo.OrderMemoryCollectionRepo;
-import main.java.ru.elena.TravelAgency.v5.Order.service.OrderMemoryCollectionService;
-import main.java.ru.elena.TravelAgency.v5.Order.service.OrderService;
-import main.java.ru.elena.TravelAgency.v5.User.repo.UserMemoryCollectionRepo;
-import main.java.ru.elena.TravelAgency.v5.User.service.UserMemoryCollectionService;
-import main.java.ru.elena.TravelAgency.v5.User.service.UserService;
-import main.java.ru.elena.TravelAgency.v5.common.business.application.servicefactory.ServiceFactory;
+import main.java.ru.elena.TravelAgency.v6.City.repo.implementation.memory.CityMemoryCollectionRepo;
+import main.java.ru.elena.TravelAgency.v6.City.service.CityService;
+import main.java.ru.elena.TravelAgency.v6.City.service.implementation.memory.CityMemoryCollectionService;
+import main.java.ru.elena.TravelAgency.v6.Country.repo.implementation.memory.CountryMemoryCollectionRepo;
+import main.java.ru.elena.TravelAgency.v6.Country.service.CountryService;
+import main.java.ru.elena.TravelAgency.v6.Country.service.implementation.memory.CountryMemoryCollectionService;
+import main.java.ru.elena.TravelAgency.v6.Order.repo.implementation.memory.OrderMemoryCollectionRepo;
+import main.java.ru.elena.TravelAgency.v6.Order.service.OrderService;
+import main.java.ru.elena.TravelAgency.v6.Order.service.implementation.memory.OrderMemoryCollectionService;
+import main.java.ru.elena.TravelAgency.v6.User.repo.implementation.memory.UserMemoryCollectionRepo;
+import main.java.ru.elena.TravelAgency.v6.User.service.UserService;
+import main.java.ru.elena.TravelAgency.v6.User.service.implementation.memory.UserMemoryCollectionService;
 
 public class MemoryCollectionServiceFactory implements ServiceFactory {
     @Override
     public CityService getCityService() {
-        return new CityMemoryCollectionService(new CityMemoryCollectionRepo());
+        return new CityMemoryCollectionService(new CityMemoryCollectionRepo(),
+                                               new OrderMemoryCollectionRepo());
     }
 
     @Override
     public CountryService getCountryService() {
-        return new CountryMemoryCollectionService(new CountryMemoryCollectionRepo(), new CityMemoryCollectionRepo());
+        return new CountryMemoryCollectionService(new CountryMemoryCollectionRepo(),
+                                                  new CityMemoryCollectionService(new CityMemoryCollectionRepo(),
+                                                                                  new OrderMemoryCollectionRepo()),
+                                                  new OrderMemoryCollectionRepo());
     }
 
     @Override
@@ -32,6 +35,6 @@ public class MemoryCollectionServiceFactory implements ServiceFactory {
 
     @Override
     public UserService getUserService() {
-        return new UserMemoryCollectionService(new UserMemoryCollectionRepo(), new OrderMemoryCollectionRepo());
+        return new UserMemoryCollectionService(new UserMemoryCollectionRepo());
     }
 }
